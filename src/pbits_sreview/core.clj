@@ -7,55 +7,162 @@
   (oz/start-server!))
 
 (def tools ; TODO(Richo)
-  {:nqc {:name "Not Quite C (NQC)" :type :textual}
-   :robotc {:name "RobotC" :type :textual}
-   :cpp {:name "C/C++" :type :textual}
-   :zr {:name "ZR graphical editor" :type :blocks}
-   :cherp {:name "CHERP" :type :tangible-visual}
-   :nxt-g {:name "NXT-G" :type :blocks}
-   :mvpl {:name "Microsoft Visual Programming Language" :type :nodes}
-   :arduino-c {:name "Arduino C" :type :textual}
-   :labview {:name "LabView" :type :nodes}
-   :robolab {:name "RobotLab" :type :blocks}
-   :proteas {:name "PROTEAS" :type :tangible-visual}
-   :modebots {:name "MODEBOTS" :type :blocks}
-   :titibots {:name "TITIBOTS" :type nil}
-   :picaxe {:name "PICAXE Programming Editor" :type nil}
-   :appinventor {:name "AppInventor" :type nil}
-   :s4a {:name "Snap4Arduino / Scratch for Arduino (S4A)" :type nil}
-   :wedo {:name "Lego WeDo software" :type nil}
-   :scratch {:name "Scratch" :type nil}
-   :snap {:name "Snap!" :type nil} ; TODO(Richo): Maybe merge with Scratch?
-   :aseba {:name "Aseba" :type nil}
-   :enchanting {:name "Enchanting" :type nil} ; TODO(Richo): No es Scratch para LEGO este? Verificar y mergear...
-   :modkit {:name "Modkit" :type nil}
-   :beebot {:name "Bee-Bot (and similar)" :type nil}
-   :tangible {:name "Tangible (KIBO and similar)" :type nil}
-   :choregraphe {:name "Choregraphe" :type nil}
-   :mblock {:name "mBLock: Scratch for mBot" :type nil}
-   :bluej {:name "BlueJ" :type nil}
-   :phogo {:name "Phogo" :type nil}
-   :viple {:name "VIPLE" :type nil}
-   :makecode {:name "MakeCode" :type nil}
-   :crumble {:name "Crumble" :type nil}
-   :talkoo {:name "Talkoo toolkit" :type nil}
-   :blocklytalky {:name "BlocklyTalky" :type nil}
-   :sphero-oop {:name "C# (con SpheroOOP)" :type nil}
-   :sphero-edu {:name "Sphero Edu" :type nil}
-   :vedils {:name "VEDILS authoring tool" :type nil}
-   :scratchx {:name "ScratchX" :type nil} ; TODO(Richo): Verificar si difiere de Scratch lo suficiente y mergear?
-   :pybokids {:name "Python (PyBoKids framework)" :type nil}
-   :kinderbot {:name "KinderBot (iPad app)" :type nil}
-   :bipes {:name "BIPES" :type nil}
-   :learnblock {:name "LearnBlock" :type nil}
-   :blockly {:name "Google Blockly" :type nil}
-   :ev3 {:name "Lego EV3 programming language" :type nil} ; TODO(Richo): Cómo se llama? NXT-G?? EV3-G?
-   :eud-mars {:name "EUD-MARS" :type nil}
-   :ardublockly {:name "Ardublockly" :type nil}
-   :python {:name "Python" :type nil}
-   :thymio-vpl {:name "Thymio VPL" :type nil}})
+  {:nqc {:name "Not Quite C (NQC)"
+         :textual? true
+         :visual? nil}
+   :robotc {:name "RobotC"
+            :textual? true
+            :visual? nil}
+   :cpp {:name "C/C++"
+         :textual? true
+         :visual? nil}
+   :zr {:name "ZR graphical editor"
+        :textual? nil
+        :visual? true}
+   :tern {:name "Tern"
+          :tangible? true
+          :textual? nil
+          :visual? true}
+   :cherp {:name "CHERP"
+           :tangible? true
+           :textual? nil
+           :visual? true}
+   :nxt-g {:name "NXT-G"
+           :textual? nil
+           :visual? true}
+   :mvpl {:name "Microsoft Visual Programming Language"
+          :textual? nil
+          :visual? true}
+   :arduino-c {:name "Arduino C"
+               :textual? true
+               :visual? nil}
+   :labview {:name "LabView"
+             :textual? nil
+             :visual? true}
+   :robolab {:name "RobotLab"
+             :textual? nil
+             :visual? true}
+   :proteas {:name "PROTEAS"
+             :tangible? true
+             :textual? nil
+             :visual? true}
+   :modebots {:name "MODEBOTS"
+              :textual? nil
+              :visual? true}
+   :titibots {:name "TITIBOTS"
+              :textual? nil
+              :visual? true}
+   :picaxe {:name "PICAXE Programming Editor"
+            :textual? true
+            :visual? true}
+   :appinventor {:name "AppInventor"
+                 :textual? nil
+                 :visual? true}
+   :s4a {:name "Snap4Arduino / Scratch for Arduino (S4A)"
+         :textual? nil
+         :visual? true}
+   :wedo {:name "Lego WeDo software"
+          :textual? nil
+          :visual? true}
+   :scratch {:name "Scratch"
+             :textual? nil
+             :visual? true}
+   :snap {:name "Snap!"
+          :textual? nil
+          :visual? true} ; TODO(Richo): Maybe merge with Scratch?
+   :aseba {:name "Aseba"
+           :textual? true
+           :visual? nil}
+   :enchanting {:name "Enchanting"
+                :textual? nil
+                :visual? true} ; TODO(Richo): No es Scratch para LEGO este? Verificar y mergear...
+   :modkit {:name "Modkit"
+            :textual? true
+            :visual? true}
+   :beebot {:name "Bee-Bot (and similar)"
+            :tangible? true ; ponele
+            :textual? nil
+            :visual? nil}
+   :tangible {:name "Tangible (KIBO and similar)"
+              :tangible? true
+              :textual? nil
+              :visual? nil}
+   :choregraphe {:name "Choregraphe"
+                 :textual? nil
+                 :visual? true}
+   :mblock {:name "mBLock: Scratch for mBot"
+            :textual? nil
+            :visual? true}
+   :bluej {:name "BlueJ"
+           :textual? true
+           :visual? true}
+   :phogo {:name "Phogo"
+           :textual? true
+           :visual? nil}
+   :viple {:name "VIPLE"
+           :textual? nil
+           :visual? true}
+   :makecode {:name "MakeCode"
+              :textual? true
+              :visual? true}
+   :crumble {:name "Crumble"
+             :textual? nil
+             :visual? true}
+   :talkoo {:name "Talkoo toolkit"
+            :textual? nil
+            :visual? true}
+   :blocklytalky {:name "BlocklyTalky"
+                  :textual? nil
+                  :visual? true}
+   :sphero-oop {:name "C# (con SpheroOOP)"
+                :textual? true
+                :visual? nil}
+   :sphero-edu {:name "Sphero Edu"
+                :textual? true
+                :visual? true}
+   :vedils {:name "VEDILS authoring tool"
+            :textual? nil
+            :visual? true}
+   :scratchx {:name "ScratchX"
+              :textual? nil
+              :visual? true} ; TODO(Richo): Verificar si difiere de Scratch lo suficiente y mergear?
+   :pybokids {:name "Python (PyBoKids framework)"
+              :textual? true
+              :visual? nil}
+   :kinderbot {:name "KinderBot (iPad app)"
+               :textual? nil
+               :visual? true}
+   :bipes {:name "BIPES"
+           :textual? nil
+           :visual? true}
+   :learnblock {:name "LearnBlock"
+                :textual? true
+                :visual? true}
+   :blockly {:name "Google Blockly"
+             :textual? nil
+             :visual? true}
+   :ev3 {:name "Lego EV3 programming language"
+         :textual? nil
+         :visual? true} ; TODO(Richo): Cómo se llama? NXT-G?? EV3-G?
+   :eud-mars {:name "EUD-MARS"
+              :textual? nil
+              :visual? true}
+   :ardublockly {:name "Ardublockly"
+                 :textual? nil
+                 :visual? true}
+   :python {:name "Python"
+            :textual? true
+            :visual? nil}
+   :thymio-vpl {:name "Thymio VPL"
+                :textual? nil
+                :visual? true}})
 
 (count tools)
+
+(do ; Verify tools
+  (doseq [[name {:keys [tangible? textual? visual?]}] tools]
+    (when-not (or tangible? textual? visual?)
+      (println "WTF!" name))))
 
 
 (def papers
@@ -67,7 +174,7 @@
     :tools [:nqc]}
    {:id 3 :doi "10.1007/s00779-011-0404-2" :year 2012
     :ages [4 7]
-    :tools [:tangible]}
+    :tools [:tern]}
    {:id 4 :doi "10.5755/j01.eee.18.9.2825" :year 2012
     :ages [16 17]
     :tools [:robotc]}
