@@ -548,5 +548,6 @@
 (comment
 
   (redraw!)
+  (oz/export! (generate-vega-doc) "index.html")
 
   )
