@@ -528,12 +528,11 @@
                                            "18+")}
                            :y {:field :count
                                :title "Proporción de papers"
-                               ;:aggregate "sum"
+                               :axis {:format "%"}
                                :stack "normalize"
                                :type "quantitative"}
                            :color {:field :type
-                                   :title "Tipo de herramienta"}
-                           }
+                                   :title "Tipo de herramienta"}}
                 :layer [{:mark {:type :bar :point true :tooltip true}}]}]])
 
 (defn redraw! []
