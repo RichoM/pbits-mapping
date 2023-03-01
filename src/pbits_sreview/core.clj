@@ -476,16 +476,65 @@
         (when-not (contains? tools tool)
           (println "Paper" (:id paper) "has invalid tool" tool))))))
 
+(defn age-set
+  ([] #{})
+  ([begin] #{begin})
+  ([begin end] (set (range begin (inc end)))))
+
+(defn tool-types-by-age []
+  (let [papers (map #(assoc % :age-set (apply age-set (:ages %))) papers)]
+    (mapcat (fn [age]
+              (let [valid-papers (filter (fn [{:keys [age-set]}]
+                                           (contains? age-set age))
+                                         papers)
+                    tangible? (comp :tangible? tools)
+                    visual? (comp :visual? tools)
+                    textual? (comp :textual? tools)
+                    age-str (if (= 18 age) "18+" (str age))]
+                [{:age age-str
+                  :type "Tangible (+BeeBot)"
+                  :count (count (filter (fn [paper]
+                                          (some tangible? (:tools paper)))
+                                        valid-papers))}
+                 {:age age-str
+                  :type "Visual"
+                  :count (count (filter (fn [paper]
+                                          (some visual? (:tools paper)))
+                                        valid-papers))}
+                 {:age age-str
+                  :type "Textual"
+                  :count (count (filter (fn [paper]
+                                          (some textual? (:tools paper)))
+                                        valid-papers))}]))
+            (range 3 19))))
+
 (defn generate-vega-doc []
   [:div {:style {:display "flex" :flex-wrap "wrap"}}
    [:vega-lite {:data {:values papers}
                 :encoding {:x {:field :year
+                               :title "Año"
                                :type "ordinal"}
                            :y {:field "doi"
+                               :title "Cantidad de papers"
                                :aggregate "count"}
                            ;:color {:field :year}
                            }
-                :layer [{:mark {:type :line :point true :tooltip true}}]}]])
+                :layer [{:mark {:type :line :point true :tooltip true}}]}]
+   [:vega-lite {:data {:values (tool-types-by-age)}
+                :encoding {:x {:field :age
+                               :title "Edad"
+                               :type "ordinal"
+                               :sort (conj (mapv str (range 3 18))
+                                           "18+")}
+                           :y {:field :count
+                               :title "Proporción de papers"
+                               ;:aggregate "sum"
+                               :stack "normalize"
+                               :type "quantitative"}
+                           :color {:field :type
+                                   :title "Tipo de herramienta"}
+                           }
+                :layer [{:mark {:type :bar :point true :tooltip true}}]}]])
 
 (defn redraw! []
   (println "REDRAW!")
