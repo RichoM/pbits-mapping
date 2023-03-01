@@ -5,5 +5,7 @@
                  [metasoarous/oz "2.0.0-alpha5" #_"1.6.0-alpha36"]]
   :main ^:skip-aot pbits-sreview.core
   :target-path "target/%s"
+  :repl-options {:init-ns pbits-sreview.core
+                 :init (-main)}
   :profiles {:uberjar {:aot :all
                        :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}})
