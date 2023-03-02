@@ -526,13 +526,57 @@
        #_(mapcat #(map tools (:tools %)) papers)))
 
 (comment
+  (group-by :type
+            (map #(assoc %
+                         :type (case (:type %)
+                                 :hybrid "Híbrida (visual / textual)"
+                                 :textual "Textual"
+                                 :visual "Visual"))
+                 (remove #(= :tangible (:type %))
+                         )))
   
+  (let [data (->> (tool-types)
+                  (remove #(= :tangible (:type %)))
+                  (group-by :type)
+                  (map (fn [[type tools]]
+                         [type (count tools)]))
+                  (into {}))
+        total (reduce + (vals data))]
+    (map (fn [[type count]]
+           {:type type :count count 
+            :text (str (Math/round (* 100.0 (/ count total))) "%")})
+         data))
   
+  (map (fn [{:keys [name dsl?]}]
+         {:name name :type (if dsl?
+                             "Dominio específico"
+                             "Propósito general")})
+       (vals tools))
   
+  (let [data (->> (vals tools)
+                  (group-by :dsl?)
+                  (map (fn [[dsl? tools]]
+                         [dsl? (count tools)]))
+                  (into {}))
+        total (reduce + (vals data))]
+    (map (fn [[dsl? count]]
+           {:type (if dsl? 
+                    "Dominio específico"
+                    "Propósito general")
+            :count count
+            :text (str (* 100.0 (/ count total)) "%")})
+         data))
+  
+  (map #(assoc % :type
+               (case (:type %)
+                 :hybrid "Híbrida (visual / textual)"
+                 :textual "Textual"
+                 :visual "Visual")))
   )
 
 (defn generate-vega-doc []
   [:div {:style {:display "flex" :flex-wrap "wrap"}}
+   
    [:vega-lite {:data {:values papers}
                 :encoding {:x {:field :year
                                :title "Año"
@@ -543,6 +587,7 @@
                            ;:color {:field :year}
                            }
                 :layer [{:mark {:type :line :point true :tooltip true}}]}]
+   
    [:vega-lite {:data {:values (papers-by-age)}
                 :encoding {:x {:field :age
                                :title "Edad"
@@ -553,6 +598,7 @@
                                :title "Cantidad de papers"
                                :type "quantitative"}}
                 :layer [{:mark {:type :bar :point true :tooltip true}}]}]
+   
    [:vega-lite {:data {:values (tool-types-by-age)}
                 :encoding {:x {:field :age
                                :title "Edad"
@@ -567,44 +613,78 @@
                            :color {:field :type
                                    :title "Tipo de herramienta"}}
                 :layer [{:mark {:type :bar :point true :tooltip true}}]}]
-   [:vega-lite {:data {:values (map #(assoc %
-                                            :type (case (:type %)
-                                                    :hybrid "Híbrida (visual / textual)"
-                                                    :textual "Textual"
-                                                    :visual "Visual"))
-                                    (remove #(= :tangible (:type %))
-                                            (tool-types)))}
+   
+   [:vega-lite {:data {:values (let [data (->> (tool-types)
+                                               (remove #(= :tangible (:type %)))
+                                               (group-by :type)
+                                               (map (fn [[type tools]]
+                                                      [type (count tools)]))
+                                               (into {}))
+                                     total (reduce + (vals data))]
+                                 (map (fn [[type count]]
+                                        {:type (case type
+                                                 :hybrid "Híbrida (visual / textual)"
+                                                 :visual "Visual"
+                                                 :textual "Textual")
+                                         :count count
+                                         :text (str (Math/round (* 100.0 (/ count total))) "%")})
+                                      data))}
                 :title "Todas las herramients (excepto tangibles)"
-                :encoding {:theta {:field :name
+                :encoding {:theta {:field :count
                                    :type "quantitative"
-                                   :aggregate "count"}
+                                   :stack "normalize"}
                            :color {:field :type
-                                   :title "Tipo de herramienta"}}
-                :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}]}]
-   [:vega-lite {:data {:values (map (fn [{:keys [name dsl?]}]
-                                      {:name name :type (if dsl?
-                                                          "Dominio específico"
-                                                          "Propósito general")})
-                                    (vals tools))}
+                                   :title "Tipo de herramienta"}
+                           :text {:field :text :type "nominal"}}
+                :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
+                        {:mark {:type :text :radius 75 :fill "black"}}]}]
+   
+   [:vega-lite {:data {:values (let [data (->> (vals tools)
+                                               (group-by :dsl?)
+                                               (map (fn [[dsl? tools]]
+                                                      [dsl? (count tools)]))
+                                               (into {}))
+                                     total (reduce + (vals data))]
+                                 (map (fn [[dsl? count]]
+                                        {:type (if dsl?
+                                                 "Dominio específico"
+                                                 "Propósito general")
+                                         :count count
+                                         :text (str (* 100.0 (/ count total)) "%")})
+                                      data))}
                 :title "Todas las herramientas"
-                :encoding {:theta {:field :name
+                :encoding {:theta {:field :count
                                    :type "quantitative"
-                                   :aggregate "count"}
+                                   :stack "normalize"}
                            :color {:field :type
-                                   :title "Tipo de herramienta"}}
-                :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}]}]
-   [:vega-lite {:data {:values (map (fn [{:keys [name dsl?]}]
-                                      {:name name :type (if dsl?
-                                                          "Dominio específico"
-                                                          "Propósito general")})
-                                    (filter :textual? (vals tools)))}
+                                   :title "Tipo de herramienta"}
+                           :text {:field :text :type "nominal"}}
+                :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
+                        {:mark {:type :text :radius 75 :fill "black"}}]}]
+   
+   [:vega-lite {:data {:values (let [data (->> (vals tools)
+                                               (filter :textual?)
+                                               (group-by :dsl?)
+                                               (map (fn [[dsl? tools]]
+                                                      [dsl? (count tools)]))
+                                               (into {}))
+                                     total (reduce + (vals data))]
+                                 (map (fn [[dsl? count]]
+                                        {:type (if dsl?
+                                                 "Dominio específico"
+                                                 "Propósito general")
+                                         :count count
+                                         :text (str (Math/round (* 100.0 (/ count total))) "%")})
+                                      data))}
                 :title "Sólo lenguajes textuales"
-                :encoding {:theta {:field :name
+                :encoding {:theta {:field :count
                                    :type "quantitative"
-                                   :aggregate "count"}
+                                   :stack "normalize"}
                            :color {:field :type
-                                   :title "Tipo de herramienta"}}
-                :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}]}]])
+                                   :title "Tipo de herramienta"}
+                           :text {:field :text :type "nominal"}}
+                :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
+                        {:mark {:type :text :radius 75 :fill "black"}}]}]])
 
 (defn redraw! []
   (println "REDRAW!")
