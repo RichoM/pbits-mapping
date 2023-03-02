@@ -9,202 +9,204 @@
 (def tools ; TODO(Richo)
   {:nqc {:name "Not Quite C (NQC)"
          :dsl? true
-         :textual? true
-         :visual? nil}
+         :textual? true}
    :robotc {:name "RobotC"
             :dsl? true
-            :textual? true
-            :visual? nil}
+            :textual? true}
    :cpp {:name "C/C++"
-         :textual? true
-         :visual? nil}
+         :textual? true}
    :zr {:name "ZR graphical editor"
         :dsl? true
-        :textual? nil
-        :visual? true}
+        :visual? true
+        :type :blocks}
    :tern {:name "Tern"
           :dsl? true
           :tangible? true
-          :textual? nil
-          :visual? true}
+          :visual? true
+          :type :blocks}
    :cherp {:name "CHERP"
            :dsl? true
            :tangible? true
-           :textual? nil
-           :visual? true}
+           :visual? true
+           :type :icons}
    :nxt-g {:name "NXT-G"
            :dsl? true
-           :textual? nil
-           :visual? true}
+           :visual? true
+           :type :blocks}
    :mvpl {:name "Microsoft Visual Programming Language"
           :dsl? true
-          :textual? nil
-          :visual? true}
+          :visual? true
+          :type :diagram}
    :arduino-c {:name "Arduino C"
                :dsl? true
-               :textual? true
-               :visual? nil}
+               :textual? true}
    :labview {:name "LabView"
              :dsl? true
-             :textual? nil
-             :visual? true}
-   :robolab {:name "RobotLab"
+             :visual? true
+             :type :diagram}
+   :robolab {:name "RoboLab"
              :dsl? true
-             :textual? nil
-             :visual? true}
+             :visual? true
+             :type :icons}
    :proteas {:name "PROTEAS"
              :dsl? true
              :tangible? true
-             :textual? nil
-             :visual? true}
+             :visual? true
+             :type :icons}
    :modebots {:name "MODEBOTS"
               :dsl? true
-              :textual? nil
-              :visual? true}
+              :visual? true
+              :type :icons}
    :titibots {:name "TITIBOTS"
               :dsl? true
-              :textual? nil
-              :visual? true}
+              :visual? true
+              :type :icons}
    :picaxe {:name "PICAXE Programming Editor"
             :dsl? true
             :textual? true
-            :visual? true}
+            :visual? true
+            :type :diagram}
    :appinventor {:name "AppInventor"
                  :dsl? true
-                 :textual? nil
-                 :visual? true}
+                 :visual? true
+                 :type :blocks}
    :s4a {:name "Snap4Arduino / Scratch for Arduino (S4A)"
          :dsl? true
-         :textual? nil
-         :visual? true}
+         :visual? true
+         :type :blocks}
    :wedo {:name "Lego WeDo software"
           :dsl? true
-          :textual? nil
-          :visual? true}
+          :visual? true
+          :type :blocks}
    :scratch {:name "Scratch"
              :dsl? true
-             :textual? nil
-             :visual? true}
+             :visual? true
+             :type :blocks}
    :snap {:name "Snap!"
           :dsl? true
-          :textual? nil
-          :visual? true} ; TODO(Richo): Maybe merge with Scratch?
+          :visual? true
+          :type :blocks} ; TODO(Richo): Maybe merge with Scratch?
    :aseba {:name "Aseba"
            :dsl? true
-           :textual? true
-           :visual? nil}
+           :textual? true}
    :enchanting {:name "Enchanting"
                 :dsl? true
-                :textual? nil
-                :visual? true} ; TODO(Richo): No es Scratch para LEGO este? Verificar y mergear...
+                :visual? true
+                :type :blocks} ; TODO(Richo): No es Scratch para LEGO este? Verificar y mergear...
    :modkit {:name "Modkit"
             :dsl? true
             :textual? true
-            :visual? true}
+            :visual? true
+            :type :blocks}
    :beebot {:name "Bee-Bot (and similar)"
             :tangible? true ; ponele
-            :textual? nil
-            :visual? nil}
+            }
    :tangible {:name "Tangible (KIBO and similar)"
-              :tangible? true
-              :textual? nil
-              :visual? nil}
+              :tangible? true}
    :choregraphe {:name "Choregraphe"
                  :dsl? true
-                 :textual? nil
-                 :visual? true}
+                 :visual? true
+                 :type :diagram}
    :mblock {:name "mBLock: Scratch for mBot"
             :dsl? true
-            :textual? nil
-            :visual? true}
+            :visual? true
+            :type :blocks}
    :bluej {:name "BlueJ"
            :dsl? true
            :textual? true
-           :visual? true}
+           :visual? true
+           :type :blocks}
    :phogo {:name "Phogo"
            :dsl? true
-           :textual? true
-           :visual? nil}
+           :textual? true}
    :viple {:name "VIPLE"
            :dsl? true
-           :textual? nil
-           :visual? true}
+           :visual? true
+           :type :diagram}
    :makecode {:name "MakeCode"
               :dsl? true
               :textual? true
-              :visual? true}
+              :visual? true
+              :type :blocks}
    :crumble {:name "Crumble"
              :dsl? true
-             :textual? nil
-             :visual? true}
+             :visual? true
+             :type :blocks}
    :talkoo {:name "Talkoo toolkit"
             :dsl? true
-            :textual? nil
-            :visual? true}
+            :visual? true
+            :type :diagram}
    :blocklytalky {:name "BlocklyTalky"
                   :dsl? true
-                  :textual? nil
-                  :visual? true}
+                  :visual? true
+                  :type :blocks}
    :sphero-oop {:name "C# (con SpheroOOP)"
-                :textual? true
-                :visual? nil}
+                :textual? true}
    :sphero-edu {:name "Sphero Edu"
                 :dsl? true
                 :textual? true
-                :visual? true}
+                :visual? true
+                :type :blocks}
    :vedils {:name "VEDILS authoring tool"
             :dsl? true
-            :textual? nil
-            :visual? true}
+            :visual? true
+            :type :blocks}
    :scratchx {:name "ScratchX"
               :dsl? true
-              :textual? nil
-              :visual? true} ; TODO(Richo): Verificar si difiere de Scratch lo suficiente y mergear?
+              :visual? true
+              :type :blocks} ; TODO(Richo): Verificar si difiere de Scratch lo suficiente y mergear?
    :pybokids {:name "Python (PyBoKids framework)"
-              :textual? true
-              :visual? nil}
+              :textual? true}
    :kinderbot {:name "KinderBot (iPad app)"
                :dsl? true
-               :textual? nil
-               :visual? true}
+               :visual? true
+               :type :icons}
    :bipes {:name "BIPES"
            :dsl? true
-           :textual? nil
-           :visual? true}
+           :visual? true
+           :type :blocks}
    :learnblock {:name "LearnBlock"
                 :dsl? true
                 :textual? true
-                :visual? true}
+                :visual? true
+                :type :blocks}
    :blockly {:name "Google Blockly"
              :dsl? true
-             :textual? nil
-             :visual? true}
+             :visual? true
+             :type :blocks}
    :ev3 {:name "Lego EV3 programming language"
          :dsl? true
-         :textual? nil
-         :visual? true} ; TODO(Richo): Cómo se llama? NXT-G?? EV3-G?
+         :visual? true
+         :type :blocks} ; TODO(Richo): Cómo se llama? NXT-G?? EV3-G?
    :eud-mars {:name "EUD-MARS"
               :dsl? true
-              :textual? nil
-              :visual? true}
+              :visual? true
+              :type :blocks}
    :ardublockly {:name "Ardublockly"
                  :dsl? true
-                 :textual? nil
-                 :visual? true}
+                 :visual? true
+                 :type :blocks}
    :python {:name "Python"
-            :textual? true
-            :visual? nil}
+            :textual? true}
    :thymio-vpl {:name "Thymio VPL"
                 :dsl? true
-                :textual? nil
-                :visual? true}})
+                :visual? true
+                :type :icons}})
 
 (count tools)
 
 (do ; Verify tools
-  (doseq [[name {:keys [tangible? textual? visual?]}] tools]
+  (doseq [[name {:keys [type tangible? textual? visual?]}] tools]
+    (when-not tangible?
+      (if (and textual? (not visual?))
+        (when-not (nil? type)
+          (println "Invalid type!" name "->" type))
+        (when-not (contains? #{:blocks :diagram :icons :form} type)
+          (println "Invalid type!" name "->" type))))
     (when-not (or tangible? textual? visual?)
-      (println "WTF!" name))))
+      (println "WTF!" name)))
+  
+)
 
 (defn age-set
   ([] #{})
@@ -480,6 +482,12 @@
         (when-not (contains? tools tool)
           (println "Paper" (:id paper) "has invalid tool" tool))))))
 
+(comment
+  
+  (filter :dsl? (filter :textual? (vals tools)))
+  )
+
+
 (defn tool-types-by-age []
   (mapcat (fn [age]
             (let [valid-papers (filter (fn [{:keys [age-set]}]
@@ -525,58 +533,9 @@
        (vals tools)
        #_(mapcat #(map tools (:tools %)) papers)))
 
-(comment
-  (group-by :type
-            (map #(assoc %
-                         :type (case (:type %)
-                                 :hybrid "Híbrida (visual / textual)"
-                                 :textual "Textual"
-                                 :visual "Visual"))
-                 (remove #(= :tangible (:type %))
-                         )))
-  
-  (let [data (->> (tool-types)
-                  (remove #(= :tangible (:type %)))
-                  (group-by :type)
-                  (map (fn [[type tools]]
-                         [type (count tools)]))
-                  (into {}))
-        total (reduce + (vals data))]
-    (map (fn [[type count]]
-           {:type type :count count 
-            :text (str (Math/round (* 100.0 (/ count total))) "%")})
-         data))
-  
-  (map (fn [{:keys [name dsl?]}]
-         {:name name :type (if dsl?
-                             "Dominio específico"
-                             "Propósito general")})
-       (vals tools))
-  
-  (let [data (->> (vals tools)
-                  (group-by :dsl?)
-                  (map (fn [[dsl? tools]]
-                         [dsl? (count tools)]))
-                  (into {}))
-        total (reduce + (vals data))]
-    (map (fn [[dsl? count]]
-           {:type (if dsl? 
-                    "Dominio específico"
-                    "Propósito general")
-            :count count
-            :text (str (* 100.0 (/ count total)) "%")})
-         data))
-  
-  (map #(assoc % :type
-               (case (:type %)
-                 :hybrid "Híbrida (visual / textual)"
-                 :textual "Textual"
-                 :visual "Visual")))
-  )
-
 (defn generate-vega-doc []
   [:div {:style {:display "flex" :flex-wrap "wrap"}}
-   
+
    [:vega-lite {:data {:values papers}
                 :encoding {:x {:field :year
                                :title "Año"
@@ -587,7 +546,7 @@
                            ;:color {:field :year}
                            }
                 :layer [{:mark {:type :line :point true :tooltip true}}]}]
-   
+
    [:vega-lite {:data {:values (papers-by-age)}
                 :encoding {:x {:field :age
                                :title "Edad"
@@ -598,7 +557,7 @@
                                :title "Cantidad de papers"
                                :type "quantitative"}}
                 :layer [{:mark {:type :bar :point true :tooltip true}}]}]
-   
+
    [:vega-lite {:data {:values (tool-types-by-age)}
                 :encoding {:x {:field :age
                                :title "Edad"
@@ -613,7 +572,7 @@
                            :color {:field :type
                                    :title "Tipo de herramienta"}}
                 :layer [{:mark {:type :bar :point true :tooltip true}}]}]
-   
+
    [:vega-lite {:data {:values (let [data (->> (tool-types)
                                                (remove #(= :tangible (:type %)))
                                                (group-by :type)
@@ -638,7 +597,7 @@
                            :text {:field :text :type "nominal"}}
                 :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
                         {:mark {:type :text :radius 75 :fill "black"}}]}]
-   
+
    [:vega-lite {:data {:values (let [data (->> (vals tools)
                                                (group-by :dsl?)
                                                (map (fn [[dsl? tools]]
@@ -677,6 +636,32 @@
                                          :text (str (Math/round (* 100.0 (/ count total))) "%")})
                                       data))}
                 :title "Sólo lenguajes textuales"
+                :encoding {:theta {:field :count
+                                   :type "quantitative"
+                                   :stack "normalize"}
+                           :color {:field :type
+                                   :title "Tipo de herramienta"}
+                           :text {:field :text :type "nominal"}}
+                :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
+                        {:mark {:type :text :radius 75 :fill "black"}}]}]
+
+   [:vega-lite {:data {:values (let [data (->> (vals tools)
+                                               (filter :visual?)
+                                               (group-by :type)
+                                               (map (fn [[type tools]]
+                                                      [type (count tools)]))
+                                               (into {}))
+                                     total (reduce + (vals data))]
+                                 (map (fn [[type count]]
+                                        {:type (case type
+                                                 :blocks "Bloques"
+                                                 :diagram "Diagrama"
+                                                 :icons "Iconográfico"
+                                                 :form "Formulario")
+                                         :count count
+                                         :text (str (Math/round (* 100.0 (/ count total))) "%")})
+                                      data))}
+                :title "Lenguajes visuales"
                 :encoding {:theta {:field :count
                                    :type "quantitative"
                                    :stack "normalize"}
