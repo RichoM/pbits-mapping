@@ -701,8 +701,42 @@
                            :text {:field :text :type "nominal"}}
                 :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
                         {:mark {:type :text :radius 75 :fill "black"}}]}]
+
+   [:vega-lite {:data {:values (let [data (->> (vals tools)
+                                               (filter :textual?)
+                                               (map #(assoc % :textual-type
+                                                            (case (:textual-type %)
+                                                              :aseba "Otros"
+                                                              :basic "Otros"
+                                                              :python "Python"
+                                                              :cpp "C/C++"
+                                                              :csharp "C#"
+                                                              :java "Java"
+                                                              :js "Javascript")))
+                                               (group-by :textual-type)
+                                               (map (fn [[type tools]]
+                                                      [type (count tools)]))
+                                               (into {}))
+                                     total (reduce + (vals data))]
+                                 (map (fn [[type count]]
+                                        {:type type
+                                         :count count
+                                         :sort (if (= "Otros" type)
+                                                 (* -1 count)
+                                                 count)
+                                         :text (str (Math/round (* 100.0 (/ count total))) "%")})
+                                      data))}
+                :title "Lenguajes textuales"
+                :encoding {:theta {:field :count
+                                   :type "quantitative"
+                                   :stack "normalize"}
+                           :order {:field :sort 
+                                   :type "quantitative" 
+                                   :sort "descending"}
                            :color {:field :type
-                                   :title "Tipo de herramienta"}
+                                   :title "Lenguaje"
+                                   :sort {:field :sort
+                                          :order "descending"}}
                            :text {:field :text :type "nominal"}}
                 :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
                         {:mark {:type :text :radius 75 :fill "black"}}]}]
