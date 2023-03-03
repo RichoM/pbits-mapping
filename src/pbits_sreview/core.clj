@@ -628,8 +628,13 @@
                 :encoding {:theta {:field :count
                                    :type "quantitative"
                                    :stack "normalize"}
+                           :order {:field :count
+                                   :type "quantitative"
+                                   :sort "descending"}
                            :color {:field :type
-                                   :title "Tipo de herramienta"}
+                                   :title "Tipo de herramienta"
+                                   :sort {:field :count
+                                          :order "descending"}}
                            :text {:field :text :type "nominal"}}
                 :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
                         {:mark {:type :text :radius 75 :fill "black"}}]}]
@@ -655,8 +660,13 @@
                 :encoding {:theta {:field :count
                                    :type "quantitative"
                                    :stack "normalize"}
+                           :order {:field :count
+                                   :type "quantitative"
+                                   :sort "descending"}
                            :color {:field :type
-                                   :title "Tipo de herramienta"}
+                                   :title "Tipo de herramienta"
+                                   :sort {:field :count
+                                          :order "descending"}}
                            :text {:field :text :type "nominal"}}
                 :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
                         {:mark {:type :text :radius 75 :fill "black"}}]}]
@@ -681,6 +691,16 @@
                 :encoding {:theta {:field :count
                                    :type "quantitative"
                                    :stack "normalize"}
+                           :order {:field :count
+                                   :type "quantitative"
+                                   :sort "descending"}
+                           :color {:field :type
+                                   :title "Tipo de herramienta"
+                                   :sort {:field :count
+                                          :order "descending"}}
+                           :text {:field :text :type "nominal"}}
+                :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
+                        {:mark {:type :text :radius 75 :fill "black"}}]}]
                            :color {:field :type
                                    :title "Tipo de herramienta"}
                            :text {:field :text :type "nominal"}}
@@ -703,14 +723,20 @@
                                  (map (fn [[type count]]
                                         {:type type
                                          :count count
+                                         :sort count
                                          :text (str (Math/round (* 100.0 (/ count total))) "%")})
                                       data))}
                 :title "Lenguajes textuales"
                 :encoding {:theta {:field :count
                                    :type "quantitative"
                                    :stack "normalize"}
+                           :order {:field :sort
+                                   :type "quantitative"
+                                   :sort "descending"}
                            :color {:field :type
-                                   :title "Tipo de sintaxis"}
+                                   :title "Tipo de sintaxis"
+                                   :sort {:field :sort
+                                          :order "descending"}}
                            :text {:field :text :type "nominal"}}
                 :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
                         {:mark {:type :text :radius 75 :fill "black"}}]}]])
