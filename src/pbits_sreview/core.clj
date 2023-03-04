@@ -6,6 +6,77 @@
 (when-not (server/web-server-started?)
   (oz/start-server!))
 
+(def robots 
+  {:custom {:name "Robot personalizado" :type :custom}
+   :nxt {:name "LEGO Mindstorms NXT" :type :lego}
+   :rcx {:name "LEGO Mindstorms RCX" :type :lego}
+   :ev3 {:name "LEGO Mindstorms EV3" :type :lego}
+   :spheres {:name "SPHERES" :type :other ; ACAACA 
+             }
+   :vex {:name "VEX robot" :type :vex ; Es un kit tipo LEGO
+         }
+   :4wd {:name "Arduino 4WD Mobile Platform"
+         :type :arduino} ; 
+   :5la {:name "Lynxmotion 5LA Robotic Arm"
+         :type :robotic-arm}
+   :controllab {:name "Control Lab"
+                :type :lego}
+   :wedo {:name "LEGO Education WeDo"
+          :type :lego}
+   :kiwi {:name "KIWI robotics kit"}
+   :dani {:name "LabVIEW Robotics Starter Kit"}
+   :basic {:name "Basic Robotic System plaftorm from H&S Electronic Systems"}
+   :thymio {:name "Thymio"}
+   :arduino-uno {}
+   :arduino-nano {}
+   :arduino-mega {}
+   :arduino-duo {}
+   :arduino-lilypad {}
+   :beebot {}
+   :nao {:name "NAO by Aldebaran robotics"}
+   :c-block {:name "C-Block robot"
+             :type :custom ; ??? 
+             }
+   :mbot {:name "mBot v1.1"
+          :type :arduino}
+   :bqzum {:name "bq Zum" :type :arduino}
+   :kibo {:name "KIBO"}
+   :galileo {:name "Intel Galileo"}
+   :raspberry {:name "Raspberry Pi"}
+   :pcDuino {:name "pcDuino"}
+   :minnow {:name "MinnowBoard"}
+   :curie {:name "Intel Curie"}
+   :edison {:name "Intel Edison"}
+   :bioloid {:name "Robotis Bioloid"}
+   :microbit {:name "BBC micro:bit"}
+   :crumble {:name "Crumble robot"}
+   :talkoo {:name "Talkoo kit" :type :custom}}
+   :bluebot {:name "Blue-Bot" ; Es como el beebot pero con app mobile
+             }
+   :roamer {:name "Roamer" ; Como beebot pero con un teclado intercambiable
+            }
+   :cubetto {:name "CUBETTO"}
+   :codeapillar {:name "Code a pillar"}
+   :sphero {:name "Sphero robot"}
+   :microrobots {:name "Micro robots (by Citizen Watch LTD)"}
+   :stm32 {:name "STM32 microcontroller" ; mbed nucleo entra acá
+           }
+   :wemosd1mini {:name "Wemos D1 Mini"}
+   :esp8266 {:name "ESP8266"}
+   :esp32 {:name "ESP32"}
+   :toradex {:name "Toradex"
+             :type :sbc ; Single Board Computers (acá también entrarían las Raspberry) 
+             }
+   :beaglebone {:name "BeagleBone"
+                :type :sbc}
+   :pc104 {:name "PC/104" :type :sbc}
+   :cozmo {:name "Cozmo" :type :toy}
+   :parrot {:name "Parrot Bebop" :type :drone}
+   :irobot {:name "iRobot Create" :type :vacuum-cleaner}
+   :doc {:name "Robot DOC"}
+
+   )
+
 (def tools ; TODO(Richo)
   {:nqc {:name "Not Quite C (NQC)"
          :textual? true
