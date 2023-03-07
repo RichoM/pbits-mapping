@@ -50,7 +50,7 @@
    :bioloid {:name "Robotis Bioloid"}
    :microbit {:name "BBC micro:bit"}
    :crumble {:name "Crumble robot"}
-   :talkoo {:name "Talkoo kit" :type :custom}}
+   :talkoo {:name "Talkoo kit" :type :custom}
    :bluebot {:name "Blue-Bot" ; Es como el beebot pero con app mobile
              }
    :roamer {:name "Roamer" ; Como beebot pero con un teclado intercambiable
@@ -75,7 +75,7 @@
    :irobot {:name "iRobot Create" :type :vacuum-cleaner}
    :doc {:name "Robot DOC"}
 
-   )
+   })
 
 (def tools ; TODO(Richo)
   {:nqc {:name "Not Quite C (NQC)"
