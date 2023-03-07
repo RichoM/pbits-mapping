@@ -23,47 +23,60 @@
                 :type :lego}
    :wedo {:name "LEGO Education WeDo"
           :type :lego}
-   :kiwi {:name "KIWI robotics kit"}
-   :dani {:name "LabVIEW Robotics Starter Kit"}
-   :basic {:name "Basic Robotic System plaftorm from H&S Electronic Systems"}
-   :thymio {:name "Thymio"}
-   :arduino-uno {}
-   :arduino-nano {}
-   :arduino-mega {}
-   :arduino-duo {}
-   :arduino-lilypad {}
-   :beebot {}
-   :nao {:name "NAO by Aldebaran robotics"}
+   :kiwi {:name "KIWI robotics kit"
+          :type :kit}
+   :dani {:name "LabVIEW Robotics Starter Kit"
+          :type :kit}
+   :basic {:name "Basic Robotic System plaftorm from H&S Electronic Systems"
+           :type :kit}
+   :thymio {:name "Thymio"
+            :type :toy}
+   :arduino-uno {:name "Arduino UNO" :type :arduino}
+   :arduino-nano {:name "Arduino Nano" :type :arduino}
+   :arduino-mega {:name "Arduino MEGA 2560" :type :arduino}
+   :arduino-duo {:name "Arduino Duo" :type :arduino}
+   :arduino-lilypad {:name "Arduino LilyPad" :type :arduino}
+   :beebot {:name "BeeBot" :type :toy}
+   :nao {:name "NAO by Aldebaran robotics"
+         :type :humanoid}
    :c-block {:name "C-Block robot"
              :type :custom ; ??? 
              }
    :mbot {:name "mBot v1.1"
           :type :arduino}
    :bqzum {:name "bq Zum" :type :arduino}
-   :kibo {:name "KIBO"}
-   :galileo {:name "Intel Galileo"}
-   :raspberry {:name "Raspberry Pi"}
-   :pcDuino {:name "pcDuino"}
-   :minnow {:name "MinnowBoard"}
-   :curie {:name "Intel Curie"}
-   :edison {:name "Intel Edison"}
-   :bioloid {:name "Robotis Bioloid"}
-   :microbit {:name "BBC micro:bit"}
-   :crumble {:name "Crumble robot"}
-   :talkoo {:name "Talkoo kit" :type :custom}
-   :bluebot {:name "Blue-Bot" ; Es como el beebot pero con app mobile
-             }
-   :roamer {:name "Roamer" ; Como beebot pero con un teclado intercambiable
+   :kibo {:name "KIBO" :type :kit}
+   :galileo {:name "Intel Galileo" :type :sbc}
+   :raspberry {:name "Raspberry Pi" :type :sbc}
+   :pcDuino {:name "pcDuino" :type :sbc}
+   :minnow {:name "MinnowBoard" :type :sbc}
+   :curie {:name "Intel Curie" :type :sbc}
+   :edison {:name "Intel Edison" :type :sbc}
+   :bioloid {:name "Robotis Bioloid" :type :kit}
+   :microbit {:name "BBC micro:bit" :type :kit}
+   :crumble {:name "Crumble robot" :type :kit}
+   :talkoo {:name "Talkoo kit" :type :custom
             }
-   :cubetto {:name "CUBETTO"}
-   :codeapillar {:name "Code a pillar"}
-   :sphero {:name "Sphero robot"}
-   :microrobots {:name "Micro robots (by Citizen Watch LTD)"}
+   :bluebot {:name "Blue-Bot" ; Es como el beebot pero con app mobile
+             :type :toy}
+   :roamer {:name "Roamer" ; Como beebot pero con un teclado intercambiable
+            :type :toy}
+   :cubetto {:name "CUBETTO"
+             :type :toy}
+   :codeapillar {:name "Code a pillar"
+                 :type :toy}
+   :sphero {:name "Sphero robot"
+            :type :toy}
+   :microrobots {:name "Micro robots (by Citizen Watch LTD)"
+                 :type :other}
    :stm32 {:name "STM32 microcontroller" ; mbed nucleo entra acá
-           }
-   :wemosd1mini {:name "Wemos D1 Mini"}
-   :esp8266 {:name "ESP8266"}
-   :esp32 {:name "ESP32"}
+           :type :microcontroller}
+   :wemosd1mini {:name "Wemos D1 Mini"
+                 :type :microcontroller}
+   :esp8266 {:name "ESP8266"
+             :type :microcontroller}
+   :esp32 {:name "ESP32"
+           :type :microcontroller}
    :toradex {:name "Toradex"
              :type :sbc ; Single Board Computers (acá también entrarían las Raspberry) 
              }
@@ -73,7 +86,7 @@
    :cozmo {:name "Cozmo" :type :toy}
    :parrot {:name "Parrot Bebop" :type :drone}
    :irobot {:name "iRobot Create" :type :vacuum-cleaner}
-   :doc {:name "Robot DOC"}
+   :doc {:name "Robot DOC" :type :toy}
 
    })
 
@@ -284,8 +297,6 @@
                 :visual? true
                 :visual-dsl? true
                 :visual-type :icons}})
-
-(count tools)
 
 
 (do ; Verify tools
@@ -589,11 +600,6 @@
         (when-not (contains? tools tool)
           (println "Paper" (:id paper) "has invalid tool" tool))))))
 
-(comment
-  
-  (filter :dsl? (filter :textual? (vals tools)))
-  )
-
 
 (defn tool-types-by-age []
   (mapcat (fn [age]
@@ -801,8 +807,8 @@
                 :encoding {:theta {:field :count
                                    :type "quantitative"
                                    :stack "normalize"}
-                           :order {:field :sort 
-                                   :type "quantitative" 
+                           :order {:field :sort
+                                   :type "quantitative"
                                    :sort "descending"}
                            :color {:field :type
                                    :title "Lenguaje"
@@ -844,7 +850,54 @@
                                           :order "descending"}}
                            :text {:field :text :type "nominal"}}
                 :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
+                        {:mark {:type :text :radius 75 :fill "black"}}]}]
+
+   [:vega-lite {:data {:values (let [data (->> (vals robots)
+                                               (map #(assoc % :type
+                                                            (condp contains? (:type %)
+                                                                   #{:vex :robotic-arm :drone 
+                                                                     :vacuum-cleaner :humanoid} :other
+                                                                   #{:arduino :microcontroller} :arduino
+                                                                   #{:kit :lego} :kit
+                                                                   (:type %))))
+                                               (group-by :type)
+                                               (map (fn [[type tools]]
+                                                      [type (count tools)]))
+                                               (into {}))
+                                     total (reduce + (vals data))]
+                                 (map (fn [[type count]]
+                                        {:type (case type
+                                                 :toy "Juguete robot"
+                                                 :sbc "Single-Board Computer"
+                                                 :arduino "Placa Arduino (y similares)"
+                                                 :kit "Kit de robótica (LEGO y otros)"
+                                                 :custom "Robot personalizado"
+                                                 :other "Otros robots")
+                                         :count count
+                                         :sort (if (= type :other) -1 count)
+                                         :text (str (Math/round (* 100.0 (/ count total))) "%")})
+                                      data))}
+                :title "Tipos de hardware"
+                :encoding {:theta {:field :count
+                                   :type "quantitative"
+                                   :stack "normalize"}
+                           :order {:field :sort
+                                   :type "quantitative"
+                                   :sort "descending"}
+                           :color {:field :type
+                                   :title "Tipo de hardware"
+                                   :sort {:field :sort
+                                          :order "descending"}}
+                           :text {:field :text :type "nominal"}}
+                :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
                         {:mark {:type :text :radius 75 :fill "black"}}]}]])
+
+(comment
+  
+  (filter (comp nil? :type) (vals robots))
+
+  
+  )
 
 (defn redraw! []
   (println "REDRAW!")
