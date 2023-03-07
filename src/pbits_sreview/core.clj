@@ -706,8 +706,8 @@
                                                (filter :textual?)
                                                (map #(assoc % :textual-type
                                                             (case (:textual-type %)
-                                                              :aseba "Otros"
-                                                              :basic "Otros"
+                                                              :aseba "Aseba"
+                                                              :basic "BASIC"
                                                               :python "Python"
                                                               :cpp "C/C++"
                                                               :csharp "C#"
