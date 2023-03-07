@@ -13,7 +13,7 @@
    :ev3 {:name "LEGO Mindstorms EV3" :type :lego}
    :spheres {:name "SPHERES" :type :other ; ACAACA 
              }
-   :vex {:name "VEX robot" :type :vex ; Es un kit tipo LEGO
+   :vex {:name "VEX robot" :type :kit ; Es un kit tipo LEGO
          }
    :4wd {:name "Arduino 4WD Mobile Platform"
          :type :arduino} ; 
