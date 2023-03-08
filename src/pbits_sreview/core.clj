@@ -763,6 +763,9 @@
 (defn markdown [& texts]
   (m/component (m/md->hiccup (str/join "\r\n" texts))))
 
+(defn percent [n]
+  (str (format "%.2f" (* 100.0 n)) "%"))
+
 (defn generate-vega-doc []
   [:div
    [:h2 {:style {:margin-top 0}}
@@ -824,7 +827,7 @@
                                                       :visual "Visual"
                                                       :textual "Textual")
                                               :count count
-                                              :text (str (Math/round (* 100.0 (/ count total))) "%")})
+                                              :text (percent (/ count total))})
                                            data))}
                      :title "Todas las herramientas (excluyendo tangibles)"
                      :encoding {:theta {:field :count
@@ -855,7 +858,7 @@
                                                       "Dominio específico"
                                                       "Propósito general")
                                               :count count
-                                              :text (str (* 100.0 (/ count total)) "%")})
+                                              :text (percent (/ count total))})
                                            data))}
                      :title "Todas las herramientas"
                      :encoding {:theta {:field :count
@@ -887,7 +890,7 @@
                                                  :icons "Iconográfico"
                                                  :form "Formulario")
                                          :count count
-                                         :text (str (Math/round (* 100.0 (/ count total))) "%")})
+                                         :text (percent (/ count total))})
                                       data))}
                 :title "Lenguajes visuales"
                 :encoding {:theta {:field :count
@@ -927,7 +930,7 @@
                                               :sort (if (= "Otros" type)
                                                       (* -1 count)
                                                       count)
-                                              :text (str (Math/round (* 100.0 (/ count total))) "%")})
+                                              :text (percent (/ count total))})
                                            data))}
                      :title "Lenguajes textuales"
                      :encoding {:theta {:field :count
@@ -961,7 +964,7 @@
                                              {:type type
                                               :count count
                                               :sort count
-                                              :text (str (Math/round (* 100.0 (/ count total))) "%")})
+                                              :text (percent (/ count total))})
                                            data))}
                      :title "Lenguajes textuales"
                      :encoding {:theta {:field :count
@@ -1002,7 +1005,7 @@
                                                       :other "Otros robots")
                                               :count count
                                               :sort (if (= type :other) -1 count)
-                                              :text (str (Math/round (* 100.0 (/ count total))) "%")})
+                                              :text (percent (/ count total))})
                                            data))}
                      :title "Tipos de hardware"
                      :encoding {:theta {:field :count
