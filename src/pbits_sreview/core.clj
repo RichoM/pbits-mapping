@@ -261,6 +261,9 @@
    :pybokids {:name "Python (PyBoKids framework)"
               :textual? true
               :textual-type :python}
+   :pynxc {:name "PyNXC"
+           :textual? true
+           :textual-type :python}
    :kinderbot {:name "KinderBot (iPad app)"
                :visual? true
                :visual-dsl? true
@@ -359,6 +362,10 @@
           :ages [4 6]
           :tools [:cherp]
           :robots [:lego]}
+         {:id 6.5 :doi "10.1109/TLA.2013.6502866" :year 2013
+          :ages [18]
+          :tools [:pynxc]
+          :robots [:nxt]}
          {:id 7 :doi "10.1080/08993408.2013.847165" :year 2013
           :ages [14 15]
           :tools [:robotc]
