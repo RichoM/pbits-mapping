@@ -676,20 +676,9 @@
           :ages [15 19]
           :tools [:blockly :python]
           :robots [:arduino-mega :raspberry]}
-         {:id 84 :doi "10.1080/10494820.2019.1636090" :year 2022
-          :ages [11 12]
-          :tools [:scratch]
-          :robots [:arduino-mega]}
-         {:id 85 :doi "10.1007/s13218-021-00752-4" :year 2022
-          :ages [4 5]
-          :tools [:beebot]
-          :robots [:beebot]}
-         {:id 86 :doi "10.1016/j.compedu.2022.104431" :year 2022
-          :ages [8 9]
-          :tools [:thymio-vpl]
-          :robots [:thymio]}]))
+         ]))
 
-(do ; Verify paper tools
+(do ; Verify papers
   (doseq [paper papers]
     (if (empty? (:tools paper))
       (println "Paper" (:id paper) "has NO tools!")
