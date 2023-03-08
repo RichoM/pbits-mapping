@@ -822,7 +822,7 @@
                                               :count count
                                               :text (str (Math/round (* 100.0 (/ count total))) "%")})
                                            data))}
-                     :title "Todas las herramientas (excepto tangibles)"
+                     :title "Todas las herramientas (excluyendo tangibles)"
                      :encoding {:theta {:field :count
                                         :type "quantitative"
                                         :stack "normalize"}
