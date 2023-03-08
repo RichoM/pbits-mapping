@@ -448,7 +448,7 @@
           :robots [:thymio]}
          {:id 27 :doi "10.1109/MRA.2016.2636372" :year 2017
           :ages nil
-          :tools [:aseba]
+          :tools [:aseba :thymio-vpl :blockly]
           :robots [:thymio]}
          {:id 28 :doi "10.1145/3043950" :year 2017
           :ages [10 14]
