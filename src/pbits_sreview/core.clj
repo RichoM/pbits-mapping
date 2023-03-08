@@ -1,7 +1,8 @@
 (ns pbits-sreview.core
   (:require [oz.core :as oz]
             [oz.server :as server]
-            [markdown-to-hiccup.core :as m])
+            [markdown-to-hiccup.core :as m]
+            [clojure.string :as str])
   (:gen-class))
 
 (when-not (server/web-server-started?)
