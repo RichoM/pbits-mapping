@@ -2,7 +2,8 @@
   (:require [oz.core :as oz]
             [oz.server :as server]
             [markdown-to-hiccup.core :as m]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [clojure.data :as data])
   (:gen-class))
 
 (when-not (server/web-server-started?)
@@ -679,6 +680,12 @@
          ]))
 
 (do ; Verify papers
+  (when-not (= (set (conj (keys robots) :arduino :lego))
+               (set (mapcat :robots papers)))
+    (println "Inconsistency in the robots!"))
+  (when-not (= (set (keys tools))
+               (set (mapcat :tools papers)))
+    (println "Inconsistency in the tools!"))
   (doseq [paper papers]
     (if (empty? (:tools paper))
       (println "Paper" (:id paper) "has NO tools!")
