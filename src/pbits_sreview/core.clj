@@ -884,35 +884,35 @@
 
    [:h4 "¿Qué tipos de lenguajes visuales soportan los entornos relevados?"]
    (row [:vega-lite {:data {:values (let [data (->> (vals tools)
-                                               (filter :visual?)
-                                               (group-by :visual-type)
-                                               (map (fn [[type tools]]
-                                                      [type (count tools)]))
-                                               (into {}))
-                                     total (reduce + (vals data))]
-                                 (map (fn [[type count]]
-                                        {:type (case type
-                                                 :blocks "Bloques"
-                                                 :diagram "Diagrama"
-                                                 :icons "Iconográfico"
-                                                 :form "Formulario")
-                                         :count count
-                                         :text (percent (/ count total))})
-                                      data))}
-                :title "Lenguajes visuales"
-                :encoding {:theta {:field :count
-                                   :type "quantitative"
-                                   :stack "normalize"}
-                           :order {:field :count
-                                   :type "quantitative"
-                                   :sort "descending"}
-                           :color {:field :type
-                                   :title "Tipo de herramienta"
-                                   :sort {:field :count
-                                          :order "descending"}}
-                           :text {:field :text :type "nominal"}}
-                :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
-                        {:mark {:type :text :radius 75 :fill "black"}}]}])
+                                                    (filter :visual?)
+                                                    (group-by :visual-type)
+                                                    (map (fn [[type tools]]
+                                                           [type (count tools)]))
+                                                    (into {}))
+                                          total (reduce + (vals data))]
+                                      (map (fn [[type count]]
+                                             {:type (case type
+                                                      :blocks "Bloques"
+                                                      :diagram "Diagrama"
+                                                      :icons "Iconográfico"
+                                                      :form "Formulario")
+                                              :count count
+                                              :text (percent (/ count total))})
+                                           data))}
+                     :title "Lenguajes visuales"
+                     :encoding {:theta {:field :count
+                                        :type "quantitative"
+                                        :stack "normalize"}
+                                :order {:field :count
+                                        :type "quantitative"
+                                        :sort "descending"}
+                                :color {:field :type
+                                        :title "Tipo de herramienta"
+                                        :sort {:field :count
+                                               :order "descending"}}
+                                :text {:field :text :type "nominal"}}
+                     :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
+                             {:mark {:type :text :radius 75 :fill "black"}}]}])
 
    [:h4 "¿Qué tipos de lenguajes textuales soportan los entornos relevados?"]
    (row [:vega-lite {:data {:values (let [data (->> (vals tools)
