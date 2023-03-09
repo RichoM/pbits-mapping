@@ -1297,24 +1297,59 @@
                                 :y {:field :count
                                     :title "Cantidad de artículos"
                                     :type "quantitative"}}
-                     :layer [{:mark {:type :bar :point true :tooltip true}}]}])])
+                     :layer [{:mark {:type :bar :point true :tooltip true}}]}])
+
+   [:h4 "___"]
+   (row [:vega-lite {:data {:values (let [features [:autonomy? :concurrency? :debugging?
+                                                    :liveness? :monitoring?]
+                                          total (count tool-features)]
+                                      (for [x features, y features
+                                            ;:when (not= x y)
+                                            ]
+                                        (let [count (count (filter #(and (x %) (y %))
+                                                                   (vals tool-features)))]
+                                          {:x x :y y
+                                           :keys (map first (filter #(and (x (second %)) 
+                                                                          (y (second %)))
+                                                                    tool-features))
+                                           :percent (* 100.0 (/ count total))
+                                           :text (percent (/ count total))
+                                           :count count})))}
+                     :width 300
+                     :height 300
+                     :encoding {:x {:field :x :type "ordinal"
+                                    :title nil
+                                    :sort [:autonomy? :concurrency? :monitoring?
+                                           :liveness? :debugging?]}
+                                :y {:field :y :type "ordinal"
+                                    :title nil
+                                    :sort (reverse [:autonomy? :concurrency? :monitoring?
+                                                    :liveness? :debugging?])}}
+                     :layer [{:mark "rect"
+                              :encoding {:color {:field :percent
+                                                 :type "quantitative"
+                                                 :title "%"
+                                                 :legend {:direction "vertical"
+                                                          :gradientLength 120}}}}
+                             {:mark "text"
+                              :encoding {:text {:field :text
+                                                :type "nominal"}
+                                         :color {:condition {:test "datum['percent'] < 30" 
+                                                             :value "black"}
+                                                 :value "white"}}}]}])])
 
 
 (comment
-  (reduce-kv (fn [m k v]
-               (let [k' (condp contains? k
-                          #{:vex :robotic-arm :drone
-                            :vacuum-cleaner :humanoid} :other
-                          #{:arduino :microcontroller} :arduino
-                          #{:kit :lego} :kit
-                          k)]
-                 (if-let [v' (m k')]
-                   (assoc m k' (+ v' v))
-                   (assoc m k' v))))
-             {}
-             (papers-by-robot-type))
-  (number nil)
-  (update {} :a + 1)
+  
+  (let [features [:autonomy? :concurrency? :debugging? 
+                  :liveness? :monitoring?]]
+    (for [x features, y features
+          :when (not= x y)]
+      {:x x :y y
+       :keys (map first (filter #(and (x (second %)) (y (second %)))
+                                tool-features))
+       :count (count (filter #(and (x %) (y %))
+                             (vals tool-features)))}))
 
   )
 
