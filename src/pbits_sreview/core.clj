@@ -799,7 +799,7 @@
                                          :title "Cantidad de artículos"
                                          :type "quantitative"}}}
                          {:mark {:type :rule :color "red"}
-                          :encoding {:y {;:aggregate "average"
+                          :encoding {:y {:aggregate "average"
                                          :field "average-count"
                                          :type "quantitative"}}}]}])
 
