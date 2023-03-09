@@ -1300,43 +1300,51 @@
                      :layer [{:mark {:type :bar :point true :tooltip true}}]}])
 
    [:h4 "___"]
-   (row [:vega-lite {:data {:values (let [features [:autonomy? :concurrency? :debugging?
-                                                    :liveness? :monitoring?]
-                                          total (count tool-features)]
-                                      (for [x features, y features
+   (row [:vega-lite (let [feature->text {:autonomy? "Autonomía"
+                                         :concurrency? "Concurrencia"
+                                         :debugging? "Depuración"
+                                         :liveness? "Interactividad"
+                                         :monitoring? "Monitoreo"}]
+                      {:data {:values (let [features [:autonomy? :concurrency? :debugging?
+                                                      :liveness? :monitoring?]
+                                            total (count tool-features)]
+                                        (for [x features, y features
                                             ;:when (not= x y)
-                                            ]
-                                        (let [count (count (filter #(and (x %) (y %))
-                                                                   (vals tool-features)))]
-                                          {:x x :y y
-                                           :keys (map first (filter #(and (x (second %)) 
-                                                                          (y (second %)))
-                                                                    tool-features))
-                                           :percent (* 100.0 (/ count total))
-                                           :text (percent (/ count total))
-                                           :count count})))}
-                     :width 300
-                     :height 300
-                     :encoding {:x {:field :x :type "ordinal"
-                                    :title nil
-                                    :sort [:autonomy? :concurrency? :monitoring?
-                                           :liveness? :debugging?]}
-                                :y {:field :y :type "ordinal"
-                                    :title nil
-                                    :sort (reverse [:autonomy? :concurrency? :monitoring?
-                                                    :liveness? :debugging?])}}
-                     :layer [{:mark "rect"
-                              :encoding {:color {:field :percent
-                                                 :type "quantitative"
-                                                 :title "%"
-                                                 :legend {:direction "vertical"
-                                                          :gradientLength 120}}}}
-                             {:mark "text"
-                              :encoding {:text {:field :text
-                                                :type "nominal"}
-                                         :color {:condition {:test "datum['percent'] < 30" 
-                                                             :value "black"}
-                                                 :value "white"}}}]}])])
+                                              ]
+                                          (let [count (count (filter #(and (x %) (y %))
+                                                                     (vals tool-features)))]
+                                            {:x (feature->text x) 
+                                             :y (feature->text y)
+                                             :keys (map first (filter #(and (x (second %))
+                                                                            (y (second %)))
+                                                                      tool-features))
+                                             :percent (* 100.0 (/ count total))
+                                             :text (percent (/ count total))
+                                             :count count})))}
+                       :width 300
+                       :height 300
+                       :encoding {:x {:field :x :type "ordinal"
+                                      :title nil
+                                      :sort (map feature->text
+                                                 [:autonomy? :concurrency? :monitoring?
+                                                  :liveness? :debugging?])}
+                                  :y {:field :y :type "ordinal"
+                                      :title nil
+                                      :sort (map feature->text
+                                                 (rseq [:autonomy? :concurrency? :monitoring?
+                                                        :liveness? :debugging?]))}}
+                       :layer [{:mark "rect"
+                                :encoding {:color {:field :percent
+                                                   :type "quantitative"
+                                                   :title "%"
+                                                   :legend {:direction "vertical"
+                                                            :gradientLength 120}}}}
+                               {:mark "text"
+                                :encoding {:text {:field :text
+                                                  :type "nominal"}
+                                           :color {:condition {:test "datum['percent'] < 30"
+                                                               :value "black"}
+                                                   :value "white"}}}]})])])
 
 
 (comment
