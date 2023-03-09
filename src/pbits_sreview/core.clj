@@ -332,6 +332,244 @@
   
 )
 
+(def tool-features
+  {:arduino-c {:concurrency? false
+               :liveness? false
+               :debugging? false
+               :monitoring? false
+               :autonomy? true}
+   :titibots {:concurrency? false
+              :liveness? false
+              :debugging? false
+              :monitoring? false
+              :autonomy? false}
+   :modkit {:concurrency? true
+            :liveness? false
+            :debugging? false
+            :monitoring? false
+            :autonomy? true}
+   :learnblock {:concurrency? true
+                :liveness? false
+                :debugging? false
+                :monitoring? false
+                :autonomy? false}
+   #_(:pynxc {:concurrency? true
+           :liveness? false
+           :debugging? false
+           :monitoring? false
+           :autonomy? true})
+   :talkoo {:concurrency? true
+            :liveness? true
+            :debugging? false
+            :monitoring? true
+            :autonomy? false}
+   :choregraphe {:concurrency? true
+                 :liveness? false
+                 :debugging? false
+                 :monitoring? true
+                 :autonomy? true}
+   #_(:sphero-oop {:concurrency? true
+                :liveness? false
+                :debugging? true
+                :monitoring? false
+                :autonomy? false})
+   :snap {:concurrency? true
+          :liveness? true
+          :debugging? false
+          :monitoring? true
+          :autonomy? false}
+   :makecode {:concurrency? true
+              :liveness? false
+              :debugging? false
+              :monitoring? false
+              :autonomy? true}
+   :modebots {:concurrency? false
+              :liveness? false
+              :debugging? false
+              :monitoring? false
+              :autonomy? false}
+   :scratch {:concurrency? true
+             :liveness? true
+             :debugging? false
+             :monitoring? true
+             :autonomy? false}
+   :ardublockly {:concurrency? false
+                 :liveness? false
+                 :debugging? false
+                 :monitoring? false
+                 :autonomy? true}
+   :viple {:concurrency? true
+           :liveness? false
+           :debugging? false
+           :monitoring? false
+           :autonomy? false}
+   :crumble {:concurrency? false
+             :liveness? false
+             :debugging? false
+             :monitoring? false
+             :autonomy? true}
+   :blocklytalky {:concurrency? true
+                  :liveness? false
+                  :debugging? false
+                  :monitoring? true
+                  :autonomy? true}
+   :aseba {:concurrency? true
+           :liveness? false
+           :debugging? true
+           :monitoring? true
+           :autonomy? true}
+   :scratchx {:concurrency? true
+              :liveness? true
+              :debugging? false
+              :monitoring? true
+              :autonomy? true}
+   :enchanting {:concurrency? true
+                :liveness? false
+                :debugging? false
+                :monitoring? true
+                :autonomy? true}
+   :appinventor {:concurrency? true
+                 :liveness? true
+                 :debugging? false
+                 :monitoring? false
+                 :autonomy? false}
+   :phogo {:concurrency? true
+           :liveness? true
+           :debugging? true
+           :monitoring? true
+           :autonomy? false}
+   :sphero-edu {:concurrency? true
+                :liveness? false
+                :debugging? false
+                :monitoring? true
+                :autonomy? false}
+   :ev3 {:concurrency? true
+         :liveness? false
+         :debugging? false
+         :monitoring? true
+         :autonomy? true}
+   :thymio-vpl {:concurrency? false
+                :liveness? false
+                :debugging? true
+                :monitoring? true
+                :autonomy? true}
+   :proteas {:concurrency? false
+             :liveness? false
+             :debugging? false
+             :monitoring? false
+             :autonomy? true}
+   ;; NOTE(Richo): En el caso de mBlock tenés la posibilidad de usarlo conectado (con un firmware que no pude probar) o bajar el sketch auto-generado a la placa. Es como Physical Etoys que tenés 2 modos. Acá voy a considerarlo como en modo autónomo, por lo que el resto de las features están en false 
+   :mblock {:concurrency? false
+            :liveness? false
+            :debugging? false
+            :monitoring? false
+            :autonomy? true}
+   :wedo {:concurrency? true
+          :liveness? true
+          :debugging? false
+          :monitoring? true
+          :autonomy? false}
+   :kinderbot {:concurrency? false
+               :liveness? true
+               :debugging? false
+               :monitoring? false
+               :autonomy? true}
+   :nqc {:concurrency? true
+         :liveness? false
+         :debugging? false
+         :monitoring? false
+         :autonomy? true}
+   #_(:pybokids {:concurrency? true
+              :liveness? false
+              :debugging? false
+              :monitoring? false
+              :autonomy? false})
+   :mvpl {:concurrency? true
+          :liveness? false
+          :debugging? false
+          :monitoring? true
+          :autonomy? true}
+   :robolab {:concurrency? true
+             :liveness? false
+             :debugging? false
+             :monitoring? false
+             :autonomy? true}
+   :nxt-g {:concurrency? true
+           :liveness? false
+           :debugging? false
+           :monitoring? true
+           :autonomy? true}
+   :vedils {:concurrency? true
+            :liveness? false
+            :debugging? false
+            :monitoring? true
+            :autonomy? false}
+   :picaxe {:concurrency? false
+            :liveness? false
+            :debugging? false
+            :monitoring? false
+            :autonomy? true}
+   #_(:python {:concurrency? true
+            :liveness? false
+            :debugging? false
+            :monitoring? false
+            :autonomy? true})
+   :tern {:concurrency? false
+          :liveness? false
+          :debugging? false
+          :monitoring? false
+          :autonomy? true}
+   :bipes {:concurrency? false
+           :liveness? false
+           :debugging? false
+           :monitoring? true
+           :autonomy? true}
+   #_(:cpp {:concurrency? nil
+         :liveness? nil
+         :debugging? nil
+         :monitoring? nil
+         :autonomy? nil})
+   :zr {:concurrency? false
+        :liveness? false
+        :debugging? false
+        :monitoring? false
+        :autonomy? true}
+   :blockly  {:concurrency? false
+              :liveness? false
+              :debugging? false
+              :monitoring? false
+              :autonomy? true}
+   :labview {:concurrency? true
+             :liveness? false
+             :debugging? false
+             :monitoring? true
+             :autonomy? true}
+   :eud-mars {:concurrency? true
+              :liveness? false
+              :debugging? false
+              :monitoring? false
+              :autonomy? false}
+   :cherp {:concurrency? false
+           :liveness? false
+           :debugging? false
+           :monitoring? false
+           :autonomy? true}
+   :robotc {:concurrency? true
+            :liveness? false
+            :debugging? false
+            :monitoring? false
+            :autonomy? true}
+   :bluej {:concurrency? true
+           :liveness? false
+           :debugging? false
+           :monitoring? false
+           :autonomy? true}
+   :s4a {:concurrency? true
+         :liveness? true
+         :debugging? false
+         :monitoring? true
+         :autonomy? false}})
+
 (defn age-set
   ([] #{})
   ([begin] #{begin})
