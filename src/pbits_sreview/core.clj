@@ -782,19 +782,26 @@
                            ;:color {:field :year}
                             }
                  :layer [{:mark {:type :line :point true :tooltip true}}]}])
-   
+
    [:h4 "¿Cuántos artículos por edad de alumno?"]
    (row
     [:vega-lite {:data {:values (papers-by-age)}
-                 :encoding {:x {:field :age
-                                :title "Edad"
-                                :type "ordinal"
-                                :sort (conj (mapv str (range 3 18))
-                                            "18+")}
-                            :y {:field :count
-                                :title "Cantidad de artículos"
-                                :type "quantitative"}}
-                 :layer [{:mark {:type :bar :point true :tooltip true}}]}])
+                 :transform [{:joinaggregate [{:op "mean"
+                                               :field :count
+                                               :as "average-count"}]}]
+                 :layer [{:mark {:type :bar :point true :tooltip true}
+                          :encoding {:x {:field :age
+                                         :title "Edad"
+                                         :type "ordinal"
+                                         :sort (conj (mapv str (range 3 18))
+                                                     "18+")}
+                                     :y {:field :count
+                                         :title "Cantidad de artículos"
+                                         :type "quantitative"}}}
+                         {:mark {:type :rule :color "red"}
+                          :encoding {:y {;:aggregate "average"
+                                         :field "average-count"
+                                         :type "quantitative"}}}]}])
 
    [:h4 "¿Qué tipos de herramientas se usan a cada edad?"]
    (row
@@ -812,7 +819,7 @@
                             :color {:field :type
                                     :title "Tipo de herramienta"}}
                  :layer [{:mark {:type :bar :point true :tooltip true}}]}])
-   
+
    [:h4 "¿Qué características tienen las herramientas relevadas?"]
    (row [:vega-lite {:data {:values (let [data (->> (tool-types)
                                                     (remove #(= :tangible (:type %)))
