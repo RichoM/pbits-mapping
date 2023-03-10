@@ -1523,7 +1523,7 @@
                                                    :value "white"}}}]})])
 
    (table {:style {:text-align "center" :border "solid" :border-collapse "collapse"}}
-          [:tr
+          [:tr {:style {:border-bottom "1px solid grey"}}
            (th "Nombre")
            (th "Puntaje")
            (th "Autonomía")
@@ -1539,7 +1539,7 @@
                        bool-symbol #(if % yes no)
                        {:keys [autonomy? concurrency? monitoring?
                                liveness? debugging? visual? textual?]} features]
-                   [:tr
+                   [:tr {:style {:border-bottom "1px dashed grey"}}
                     (td {:style {:text-align "left"}} name)
                     (td score)
                     (td (bool-symbol autonomy?))
@@ -1559,39 +1559,22 @@
 
 
 (comment
-  (merge-with merge {:style {:color "black"}}
-              {:style {:text-align "center"}
-               :aria "foo"})
 
-  (boolean? "RIcho")
+  (group-by #(select-keys % [:autonomy? :concurrency? :debugging?
+                             :liveness? :monitoring?])
+            (vals tool-features))
+  (def groups *1)
 
-   (tools :nxt-g)
-  (concat [:a ]
-          [:b :c])
+  (count groups)
 
-  ; Name | Autonomía | Concurrencia | Monitoreo | Interactividad | Depuración
-  [:table
-   [:tr 
-    [:th "Nombre"]
-    [:th "Autonomía"]
-    [:th "Monitoreo"]
-    [:th "Interactividad"]
-    [:th "Depuración"]]
-   (mapv (fn [[name {:keys [autonomy? concurrency? monitoring?
-                            liveness? depuration?]}]]
-           (let [tool (tools name)
-                 yes "SI" no "NO"
-                 bool-symbol #(if % yes no)]
-             [:tr
-              [:td (:name tool)]
-              [:td (bool-symbol autonomy?)]
-              [:td (bool-symbol concurrency?)]
-              [:td (bool-symbol monitoring?)]
-              [:td (bool-symbol liveness?)]
-              [:td (bool-symbol depuration?)]]))
-         tool-features)]
+  (map (fn [[key items]] [key (count items)])
+       groups)
 
-  (tools :cpp)
+  (filter (fn [[key count]] (>= count 3))
+          (map (fn [[key items]] [key (count items)])
+               groups))
+
+
   )
 
 (defn redraw! []
