@@ -1276,7 +1276,7 @@
                                 :text {:field :text :type "nominal"}}
                      :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
                              {:mark {:type :text :radius 75 :fill "black"}}]}]
-        [:vega-lite {:data {:values (let [data (->> (vals tools)
+        #_[:vega-lite {:data {:values (let [data (->> (vals tools)
                                                     (map #(assoc % :dsl?
                                                                  (boolean
                                                                   (or (:visual-dsl? %)
