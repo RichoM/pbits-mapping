@@ -1539,9 +1539,8 @@
                        bool-symbol #(if % yes no)
                        {:keys [autonomy? concurrency? monitoring?
                                liveness? debugging? visual? textual?]} features]
-                   [:tr 
-                    (td {:style {:text-align "left"}}
-                        name)
+                   [:tr
+                    (td {:style {:text-align "left"}} name)
                     (td score)
                     (td (bool-symbol autonomy?))
                     (td (bool-symbol concurrency?))
