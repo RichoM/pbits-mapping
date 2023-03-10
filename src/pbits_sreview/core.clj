@@ -93,8 +93,13 @@
 
    })
 
-(def tools ; TODO(Richo)
-  {:nqc {:name "Not Quite C (NQC)"
+
+;; :s4a, :snap y :scrath -> :scratch
+;; :ev3 y :nxt-g   -> :lego
+;; :nqc y :nxc  ->  :nqc
+;; agrego :microblocks :xod :snek
+(def tools
+  {:nqc {:name "NQC/NXC"
          :textual? true
          :textual-dsl? true
          :textual-type :cpp}
@@ -119,7 +124,7 @@
            :visual? true
            :visual-dsl? true
            :visual-type :icons}
-   :nxt-g {:name "NXT-G"
+   :lego {:name "LEGO Mindstorms"
            :visual? true
            :visual-dsl? true
            :visual-type :blocks}
@@ -163,22 +168,14 @@
                  :visual? true
                  :visual-dsl? true
                  :visual-type :blocks}
-   :s4a {:name "Snap4Arduino / Scratch for Arduino (S4A)"
+   :scratch {:name "Scratch/Snap/S4A"
          :visual? true
          :visual-dsl? true
-         :visual-type :blocks}
+         :visual-type :blocks}   
    :wedo {:name "Lego WeDo software"
           :visual? true
           :visual-dsl? true
           :visual-type :blocks}
-   :scratch {:name "Scratch"
-             :visual? true
-             :visual-dsl? true
-             :visual-type :blocks}
-   :snap {:name "Snap!"
-          :visual? true
-          :visual-dsl? true
-          :visual-type :blocks} ; TODO(Richo): Maybe merge with Scratch?
    :aseba {:name "Aseba"
            :textual? true
            :textual-dsl? true
@@ -186,7 +183,7 @@
    :enchanting {:name "Enchanting"
                 :visual? true
                 :visual-dsl? true
-                :visual-type :blocks} ; TODO(Richo): No es Scratch para LEGO este? Verificar y mergear...
+                :visual-type :blocks} 
    :modkit {:name "Modkit"
             :textual? true
             :textual-dsl? true
@@ -258,12 +255,13 @@
    :scratchx {:name "ScratchX"
               :visual? true
               :visual-dsl? true
-              :visual-type :blocks} ; TODO(Richo): Verificar si difiere de Scratch lo suficiente y mergear?
+              :visual-type :blocks}
    :pybokids {:name "Python (PyBoKids framework)"
               :textual? true
               :textual-type :python}
    :pynxc {:name "PyNXC"
            :textual? true
+           :textual-dsl? true
            :textual-type :python}
    :kinderbot {:name "KinderBot (iPad app)"
                :visual? true
@@ -284,10 +282,6 @@
              :visual? true
              :visual-dsl? true
              :visual-type :blocks}
-   :ev3 {:name "Lego EV3 programming language"
-         :visual? true
-         :visual-dsl? true
-         :visual-type :blocks} ; TODO(Richo): Cómo se llama? NXT-G?? EV3-G?
    :eud-mars {:name "EUD-MARS"
               :visual? true
               :visual-dsl? true
@@ -302,7 +296,19 @@
    :thymio-vpl {:name "Thymio VPL"
                 :visual? true
                 :visual-dsl? true
-                :visual-type :icons}})
+                :visual-type :icons}
+   :microblocks {:name "MicroBlocks"
+                 :visual? true
+                 :visual-dsl? true
+                 :visual-type :blocks}
+   :xod {:name "XOD"
+         :visual? true
+         :visual-dsl? true
+         :visual-type :diagram}
+   :snek {:name "Snek"
+          :textual? true
+          :textual-dsl? true
+          :textual-type :python}})
 
 
 (do ; Verify tools
@@ -332,6 +338,7 @@
   
 )
 
+;; saco :sphero-oop :pybokids :python :cpp :blockly
 (def tool-features
   {:arduino-c {:name "Arduino IDE (C/C++)"
                :concurrency? false
@@ -365,11 +372,14 @@
                 :autonomy? false
                 :visual? true
                 :textual? true}
-   #_(:pynxc {:concurrency? true
-              :liveness? false
-              :debugging? false
-              :monitoring? false
-              :autonomy? true})
+   :pynxc {:name "PyNXC"
+           :concurrency? true
+           :liveness? false
+           :debugging? false
+           :monitoring? false
+           :autonomy? true
+           :visual? false
+           :textual? true}
    :talkoo {:name "Talkoo toolkit"
             :concurrency? true
             :liveness? true
@@ -386,6 +396,7 @@
                  :autonomy? true
                  :visual? true
                  :textual? false}
+   ;; NOTE(Richo): Excluido por ser C# (no específico de robótica)
    #_(:sphero-oop {:concurrency? true
                    :liveness? false
                    :debugging? true
@@ -530,7 +541,7 @@
             :autonomy? true
             :visual? true
             :textual? false}
-   :wedo {:name "Lego WeDo software"
+   :wedo {:name "LEGO WeDo"
           :concurrency? true
           :liveness? true
           :debugging? false
@@ -555,6 +566,7 @@
          :autonomy? true
          :visual? false
          :textual? true}
+   ; NOTE(Richo): Lo saqué porque es sólo un framework en python, no es un lenguaje nuevo
    #_(:pybokids {:concurrency? true
                  :liveness? false
                  :debugging? false
@@ -686,14 +698,14 @@
            :autonomy? true
            :visual? true
            :textual? true}
-   :s4a {:name "Scratch/Snap/S4A"
-         :concurrency? true
-         :liveness? true
-         :debugging? false
-         :monitoring? true
-         :autonomy? false
-         :visual? true
-         :textual? false}
+   :scratch {:name "Scratch/Snap/S4A"
+             :concurrency? true
+             :liveness? true
+             :debugging? false
+             :monitoring? true
+             :autonomy? false
+             :visual? true
+             :textual? false}
    ; NOTE(Richo): Los siguientes los agrego a pesar de que no hayan saltado en el mapeo
    :microblocks {:name "MicroBlocks"
                  :concurrency? true
@@ -761,15 +773,15 @@
           :robots [:vex]}
          {:id 8 :doi "10.1080/08993408.2013.847152" :year 2013
           :ages [9 13]
-          :tools [:nxt-g]
+          :tools [:lego]
           :robots [:nxt]}
          {:id 9 :doi "10.5755/j01.eee.20.1.6169" :year 2014
           :ages [18]
-          :tools [:nxt-g :mvpl :arduino-c]
+          :tools [:lego :mvpl :arduino-c]
           :robots [:nxt :4wd :5la]}
          {:id 10 :doi "10.5772/58249" :year 2014
           :ages [18]
-          :tools [:labview :robolab :nxt-g :robotc :nqc]
+          :tools [:labview :robolab :lego :robotc :nqc]
           :robots [:controllab :rcx :nxt :ev3]}
          {:id 11 :doi "10.1016/j.compedu.2013.10.020" :year 2014
           :ages [5 6]
@@ -813,7 +825,7 @@
           :robots [:nxt]}
          {:id 21 :doi "10.1007/978-3-319-55553-9_2" :year 2017
           :ages [8 12]
-          :tools [:s4a]
+          :tools [:scratch]
           :robots [:arduino]}
          {:id 22 :doi "10.1007/978-3-319-55553-9_13" :year 2017
           :ages [10 12]
@@ -821,7 +833,7 @@
           :robots [:wedo]}
          {:id 23 :doi "10.1007/978-3-319-55553-9_17" :year 2017
           :ages [14 15]
-          :tools [:nxt-g]
+          :tools [:lego]
           :robots [:nxt]}
          {:id 24 :doi "10.1007/978-3-319-55553-9_22" :year 2017
           :ages [10 12]
@@ -841,7 +853,7 @@
           :robots [:thymio]}
          {:id 28 :doi "10.1145/3043950" :year 2017
           :ages [10 14]
-          :tools [:scratch :snap]
+          :tools [:scratch]
           :robots [:arduino-nano]}
          {:id 29 :doi "10.1109/TE.2016.2622227" :year 2017
           :ages [10 12]
@@ -853,7 +865,7 @@
           :robots [:nxt :arduino-lilypad]}
          {:id 31 :doi "10.1109/RITA.2017.2697739" :year 2017
           :ages [15 17]
-          :tools [:nxt-g]
+          :tools [:lego]
           :robots [:nxt]}
          {:id 32 :doi "10.1016/j.chb.2017.01.018" :year 2017
           :ages [5 6]
@@ -889,7 +901,7 @@
           :robots [:bqzum :esp8266 :esp32]}
          {:id 40 :doi "10.1515/itit-2017-0032" :year 2018
           :ages [12 16]
-          :tools [:s4a]
+          :tools [:scratch]
           :robots [:arduino]}
          {:id 41 :doi "10.1007/s10798-017-9397-0" :year 2018
           :ages [3 6]
@@ -995,11 +1007,11 @@
           :robots [:ev3]}
          {:id 66 :doi "10.3389/frobt.2020.00021" :year 2020
           :ages [9 18]
-          :tools [:ev3]
+          :tools [:lego]
           :robots [:ev3]}
          {:id 67 :doi "10.1080/15391523.2020.1713263" :year 2020
           :ages [8 10]
-          :tools [:nxt-g :ev3]
+          :tools [:lego]
           :robots [:nxt :ev3]}
          {:id 68 :doi "10.1016/j.scico.2020.102534" :year 2020
           :ages [8 17]
@@ -1027,7 +1039,7 @@
           :robots [:arduino]}
          {:id 74 :doi "10.29333/ejmste/10842" :year 2021
           :ages [10 11]
-          :tools [:s4a]
+          :tools [:scratch]
           :robots [:arduino]}
          {:id 75 :doi "10.1109/TLT.2021.3058060" :year 2021
           :ages [4 10]
@@ -1035,7 +1047,7 @@
           :robots [:beebot]}
          {:id 76 :doi "10.1007/s10798-019-09559-9" :year 2021
           :ages [9 10]
-          :tools [:nxt-g]
+          :tools [:lego]
           :robots [:nxt]}
          {:id 77 :doi "10.1109/RITA.2021.3089919" :year 2021
           :ages [6 18]
@@ -1072,7 +1084,7 @@
                (set (mapcat :robots papers)))
     (println "Inconsistency in the robots!"))
   (when-not (= (set (keys tools))
-               (set (mapcat :tools papers)))
+               (conj (set (mapcat :tools papers)) :microblocks :snek :xod))
     (println "Inconsistency in the tools!"))
   (doseq [paper papers]
     (if (empty? (:tools paper))
