@@ -1190,7 +1190,7 @@
   (m/component (m/md->hiccup (str/join "\r\n" texts))))
 
 (defn percent [n]
-  (str (format "%.2f" (* 100.0 n)) "%"))
+  (str (format "%.1f" (* 100.0 n)) "%"))
 
 (defn generate-vega-doc []
   [:div
