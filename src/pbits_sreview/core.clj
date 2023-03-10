@@ -1148,6 +1148,32 @@
   [:div {:style {:display "flex" :flex-wrap "wrap"}}
    content])
 
+(defn table [& content]
+  (let [attrs (first content)
+        base-attrs {:style {:border "solid" 
+                            :border-collapse "collapse"}}]
+    (if (map? attrs)
+      [:table (merge-with merge base-attrs attrs) (next content)]
+      [:table base-attrs content])))
+
+(defn th [& content]
+  (let [attrs (first content)
+        base-attrs {:style {:border-right "1px solid black"
+                            :border-bottom "1px solid black"
+                            :border-collapse "collapse"}}]
+    (if (map? attrs)
+      [:th (merge-with merge base-attrs attrs) (next content)]
+      [:th base-attrs content])))
+
+(defn td [& content]
+  (let [attrs (first content)
+        base-attrs {:style {:border-right "1px solid black"
+                            :border-collapse "collapse"}}]
+    (if (map? attrs)
+      [:td (merge-with merge base-attrs attrs) (next content)]
+      [:td base-attrs content])))
+
+
 (defn markdown [& texts]
   (m/component (m/md->hiccup (str/join "\r\n" texts))))
 
@@ -1496,45 +1522,48 @@
                                                                :value "black"}
                                                    :value "white"}}}]})])
 
-   [:table {:style {:text-align "center"}}
-    [:tr
-     [:th "Nombre"]
-     #_[:th "Puntaje"]
-     [:th "Autonomía"]
-     [:th "Concurrencia"]
-     [:th "Monitoreo"]
-     [:th "Interactividad"]
-     [:th "Depuración"]
-     #_[:th "Visual"]
-     #_[:th "Textual"]]
-    (map (fn [{:keys [name features score]}]
-           (let [yes [:span {:style {:color "green"}} "✔"] 
-                 no [:span {:style {:color "red"}} "❌"]
-                 bool-symbol #(if % yes no)
-                 {:keys [autonomy? concurrency? monitoring?
-                         liveness? debugging? visual? textual?]} features]
-             [:tr ;{:style {:text-align "center"}}
-              [:td {:style {:text-align "left"}}
-               name]
-              #_[:td score]
-              [:td (bool-symbol autonomy?)]
-              [:td (bool-symbol concurrency?)]
-              [:td (bool-symbol monitoring?)]
-              [:td (bool-symbol liveness?)]
-              [:td (bool-symbol debugging?)]
-              #_[:td (bool-symbol visual?)]
-              #_[:td (bool-symbol textual?)]]))
-         (sort-by :score
-                  (map (fn [[_ {:keys [name] :as features}]]
-                         {:name name
-                          :features features
-                          :score (reduce + (map #(if % 1 0)
-                                                (filter boolean? (vals features))))})
-                       tool-features)))]])
+   (table {:style {:text-align "center" :border "solid" :border-collapse "collapse"}}
+          [:tr
+           (th "Nombre")
+           (th "Puntaje")
+           (th "Autonomía")
+           (th "Concurrencia")
+           (th "Monitoreo")
+           (th "Interactividad")
+           (th "Depuración")
+           (th "Visual")
+           (th "Textual")]
+          (map (fn [{:keys [name features score]}]
+                 (let [yes [:span {:style {:color "green"}} "✔"]
+                       no [:span {:style {:color "red"}} "❌"]
+                       bool-symbol #(if % yes no)
+                       {:keys [autonomy? concurrency? monitoring?
+                               liveness? debugging? visual? textual?]} features]
+                   [:tr 
+                    (td {:style {:text-align "left"}}
+                        name)
+                    (td score)
+                    (td (bool-symbol autonomy?))
+                    (td (bool-symbol concurrency?))
+                    (td (bool-symbol monitoring?))
+                    (td (bool-symbol liveness?))
+                    (td (bool-symbol debugging?))
+                    (td (bool-symbol visual?))
+                    (td (bool-symbol textual?))]))
+               (sort-by :score
+                        (map (fn [[_ {:keys [name] :as features}]]
+                               {:name name
+                                :features features
+                                :score (reduce + (map #(if % 1 0)
+                                                      (filter boolean? (vals features))))})
+                             tool-features))))])
 
 
 (comment
-  
+  (merge-with merge {:style {:color "black"}}
+              {:style {:text-align "center"}
+               :aria "foo"})
+
   (boolean? "RIcho")
 
    (tools :nxt-g)
