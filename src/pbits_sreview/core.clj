@@ -338,7 +338,7 @@
   
 )
 
-;; saco :sphero-oop :pybokids :python :cpp :blockly
+;; saco :sphero-oop :pybokids :python :cpp :blockly :appinventor
 (def tool-features
   {:arduino-c {:name "Arduino IDE (C/C++)"
                :concurrency? false
@@ -486,14 +486,15 @@
                 :autonomy? true
                 :visual? true
                 :textual? false}
-   :appinventor {:name "AppInventor"
+   ;; NOTE(Richo): Lo saco por no ser específico de robótica
+   #_(:appinventor {:name "AppInventor"
                  :concurrency? true
                  :liveness? true
                  :debugging? false
                  :monitoring? false
                  :autonomy? false
                  :visual? true
-                 :textual? false}
+                 :textual? false})
    :phogo {:name "Phogo"
            :concurrency? true
            :liveness? true
