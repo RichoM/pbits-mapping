@@ -554,7 +554,7 @@
              :textual? false
              :arduino? false}
    ;; NOTE(Richo): En el caso de mBlock tenés la posibilidad de usarlo conectado (con un firmware que no pude probar) o bajar el sketch auto-generado a la placa. Es como Physical Etoys que tenés 2 modos. Acá voy a considerarlo como en modo autónomo, por lo que el resto de las features están en false 
-   :mblock {:name "mBLock 3"
+   :mblock {:name "mBlock 3"
             :concurrency? false
             :liveness? false
             :debugging? false
@@ -1655,6 +1655,7 @@
   (def groups *1)
 
   (count groups)
+  (count tool-features)
 
   (map (fn [[key items]] [key (count items)])
        groups)
