@@ -338,7 +338,7 @@
   
 )
 
-;; saco :sphero-oop :pybokids :python :cpp :blockly :appinventor
+;; saco :sphero-oop :pybokids :python :cpp :blockly :appinventor :vedils :bluej
 (def tool-features
   {:arduino-c {:name "Arduino IDE (C/C++)"
                :concurrency? false
@@ -347,7 +347,8 @@
                :monitoring? false
                :autonomy? true
                :visual? false
-               :textual? true}
+               :textual? true
+               :arduino? true}
    :titibots {:name "TITIBOTS"
               :concurrency? false
               :liveness? false
@@ -355,7 +356,8 @@
               :monitoring? false
               :autonomy? false
               :visual? true
-              :textual? false}
+              :textual? false
+              :arduino? false}
    :modkit {:name "Modkit"
             :concurrency? true
             :liveness? false
@@ -363,7 +365,8 @@
             :monitoring? false
             :autonomy? true
             :visual? true
-            :textual? true}
+            :textual? true
+            :arduino? true}
    :learnblock {:name "LearnBlock"
                 :concurrency? true
                 :liveness? false
@@ -371,7 +374,8 @@
                 :monitoring? false
                 :autonomy? false
                 :visual? true
-                :textual? true}
+                :textual? true
+                :arduino? false}
    :pynxc {:name "PyNXC"
            :concurrency? true
            :liveness? false
@@ -379,7 +383,8 @@
            :monitoring? false
            :autonomy? true
            :visual? false
-           :textual? true}
+           :textual? true
+           :arduino? false}
    :talkoo {:name "Talkoo toolkit"
             :concurrency? true
             :liveness? true
@@ -387,7 +392,8 @@
             :monitoring? true
             :autonomy? false
             :visual? true
-            :textual? false}
+            :textual? false
+            :arduino? false}
    :choregraphe {:name "Choregraphe"
                  :concurrency? true
                  :liveness? false
@@ -395,7 +401,8 @@
                  :monitoring? true
                  :autonomy? true
                  :visual? true
-                 :textual? false}
+                 :textual? false
+                 :arduino? false}
    ;; NOTE(Richo): Excluido por ser C# (no específico de robótica)
    #_(:sphero-oop {:concurrency? true
                    :liveness? false
@@ -415,7 +422,8 @@
               :monitoring? false
               :autonomy? true
               :visual? true
-              :textual? true}
+              :textual? true
+              :arduino? false}
    :modebots {:name "MODEBOTS"
               :concurrency? false
               :liveness? false
@@ -423,7 +431,8 @@
               :monitoring? false
               :autonomy? false
               :visual? true
-              :textual? false}
+              :textual? false
+              :arduino? false}
    ;; NOTE(Richo): Merged with s4a
    #_(:scratch {:concurrency? true
                 :liveness? true
@@ -437,7 +446,8 @@
                  :monitoring? false
                  :autonomy? true
                  :visual? true
-                 :textual? false}
+                 :textual? false
+                 :arduino? true}
    :viple {:name "VIPLE"
            :concurrency? true
            :liveness? false
@@ -445,7 +455,8 @@
            :monitoring? false
            :autonomy? false
            :visual? true
-           :textual? false}
+           :textual? false
+           :arduino? true}
    :crumble {:name "Crumble"
              :concurrency? false
              :liveness? false
@@ -453,7 +464,8 @@
              :monitoring? false
              :autonomy? true
              :visual? true
-             :textual? false}
+             :textual? false
+             :arduino? false}
    :blocklytalky {:name "BlocklyTalky"
                   :concurrency? true
                   :liveness? false
@@ -461,7 +473,8 @@
                   :monitoring? true
                   :autonomy? true
                   :visual? true
-                  :textual? false}
+                  :textual? false
+                  :arduino? false}
    :aseba {:name "Aseba"
            :concurrency? true
            :liveness? false
@@ -469,7 +482,8 @@
            :monitoring? true
            :autonomy? true
            :visual? false
-           :textual? true}
+           :textual? true
+           :arduino? false}
    :scratchx {:name "ScratchX"
               :concurrency? true
               :liveness? true
@@ -477,7 +491,8 @@
               :monitoring? true
               :autonomy? true
               :visual? true
-              :textual? false}
+              :textual? false
+              :arduino? false}
    :enchanting {:name "Enchanting"
                 :concurrency? true
                 :liveness? false
@@ -485,16 +500,17 @@
                 :monitoring? true
                 :autonomy? true
                 :visual? true
-                :textual? false}
+                :textual? false
+                :arduino? false}
    ;; NOTE(Richo): Lo saco por no ser específico de robótica
    #_(:appinventor {:name "AppInventor"
-                 :concurrency? true
-                 :liveness? true
-                 :debugging? false
-                 :monitoring? false
-                 :autonomy? false
-                 :visual? true
-                 :textual? false})
+                    :concurrency? true
+                    :liveness? true
+                    :debugging? false
+                    :monitoring? false
+                    :autonomy? false
+                    :visual? true
+                    :textual? false})
    :phogo {:name "Phogo"
            :concurrency? true
            :liveness? true
@@ -502,7 +518,8 @@
            :monitoring? true
            :autonomy? false
            :visual? false
-           :textual? true}
+           :textual? true
+           :arduino? true}
    :sphero-edu {:name "Sphero Edu"
                 :concurrency? true
                 :liveness? false
@@ -510,7 +527,8 @@
                 :monitoring? true
                 :autonomy? false
                 :visual? true
-                :textual? true}
+                :textual? true
+                :arduino? false}
    ; NOTE(Richo): Merged with nxt-g into just :lego
    #_(:ev3 {:concurrency? true
             :liveness? false
@@ -524,7 +542,8 @@
                 :monitoring? true
                 :autonomy? true
                 :visual? true
-                :textual? false}
+                :textual? false
+                :arduino? false}
    :proteas {:name "PROTEAS"
              :concurrency? false
              :liveness? false
@@ -532,7 +551,8 @@
              :monitoring? false
              :autonomy? true
              :visual? true
-             :textual? false}
+             :textual? false
+             :arduino? false}
    ;; NOTE(Richo): En el caso de mBlock tenés la posibilidad de usarlo conectado (con un firmware que no pude probar) o bajar el sketch auto-generado a la placa. Es como Physical Etoys que tenés 2 modos. Acá voy a considerarlo como en modo autónomo, por lo que el resto de las features están en false 
    :mblock {:name "mBLock 3"
             :concurrency? false
@@ -541,7 +561,8 @@
             :monitoring? false
             :autonomy? true
             :visual? true
-            :textual? false}
+            :textual? false
+            :arduino? true}
    :wedo {:name "LEGO WeDo"
           :concurrency? true
           :liveness? true
@@ -549,7 +570,8 @@
           :monitoring? true
           :autonomy? false
           :visual? true
-          :textual? false}
+          :textual? false
+          :arduino? false}
    :kinderbot {:name "KinderBot (iPad app)"
                :concurrency? false
                :liveness? true
@@ -557,7 +579,8 @@
                :monitoring? false
                :autonomy? true
                :visual? true
-               :textual? false}
+               :textual? false
+               :arduino? false}
    ; NOTE(Richo): Acá agrego también NXC
    :nqc {:name "NQC/NXC"
          :concurrency? true
@@ -566,7 +589,8 @@
          :monitoring? false
          :autonomy? true
          :visual? false
-         :textual? true}
+         :textual? true
+         :arduino? false}
    ; NOTE(Richo): Lo saqué porque es sólo un framework en python, no es un lenguaje nuevo
    #_(:pybokids {:concurrency? true
                  :liveness? false
@@ -580,7 +604,8 @@
           :monitoring? true
           :autonomy? true
           :visual? true
-          :textual? false}
+          :textual? false
+          :arduino? true}
    :robolab {:name "RoboLab"
              :concurrency? true
              :liveness? false
@@ -588,7 +613,8 @@
              :monitoring? false
              :autonomy? true
              :visual? true
-             :textual? false}
+             :textual? false
+             :arduino? false}
    ; NOTE(Richo): Merged with ev3 into just :lego
    #_(:nxt-g {:concurrency? true
               :liveness? false
@@ -602,15 +628,18 @@
           :monitoring? true
           :autonomy? true
           :visual? true
-          :textual? false}
-   :vedils {:name "VEDILS authoring tool"
-            :concurrency? true
-            :liveness? false
-            :debugging? false
-            :monitoring? true
-            :autonomy? false
-            :visual? true
-            :textual? false}
+          :textual? false
+          :arduino? false}
+   ; NOTE(Richo): Lo descarto porque no es específica para robótica educativa
+   #_(:vedils {:name "VEDILS authoring tool"
+               :concurrency? true
+               :liveness? false
+               :debugging? false
+               :monitoring? true
+               :autonomy? false
+               :visual? true
+               :textual? false
+               :arduino? false})
    :picaxe {:name "PICAXE Programming Editor"
             :concurrency? false
             :liveness? false
@@ -618,7 +647,8 @@
             :monitoring? false
             :autonomy? true
             :visual? true
-            :textual? true}
+            :textual? true
+            :arduino? false}
    #_(:python {:concurrency? true
                :liveness? false
                :debugging? false
@@ -631,7 +661,8 @@
           :monitoring? false
           :autonomy? true
           :visual? true
-          :textual? false}
+          :textual? false
+          :arduino? false}
    :bipes {:name "BIPES"
            :concurrency? false
            :liveness? false
@@ -639,7 +670,8 @@
            :monitoring? true
            :autonomy? true
            :visual? true
-           :textual? false}
+           :textual? false
+           :arduino? false}
    #_(:cpp {:concurrency? nil
             :liveness? nil
             :debugging? nil
@@ -652,7 +684,8 @@
         :monitoring? false
         :autonomy? true
         :visual? true
-        :textual? false}
+        :textual? false
+        :arduino? false}
    ;; NOTE(Richo): Lo saco porque no es específico de robótica
    #_(:blockly  {:concurrency? false
                  :liveness? false
@@ -662,11 +695,12 @@
    :labview {:name "LabView"
              :concurrency? true
              :liveness? false
-             :debugging? true ; NOTE(Richo): Según la wiki de labview
+             :debugging? true ; NOTE(Richo): Según la wiki de labview (https://labviewwiki.org/wiki/Breakpoints)
              :monitoring? true
              :autonomy? true
              :visual? true
-             :textual? false}
+             :textual? false
+            :arduino? true}
    :eud-mars {:name "EUD-MARS"
               :concurrency? true
               :liveness? false
@@ -674,7 +708,8 @@
               :monitoring? false
               :autonomy? false
               :visual? true
-              :textual? false}
+              :textual? false
+              :arduino? false}
    :cherp {:name "CHERP"
            :concurrency? false
            :liveness? false
@@ -682,7 +717,8 @@
            :monitoring? false
            :autonomy? true
            :visual? true
-           :textual? false}
+           :textual? false
+           :arduino? false}
    :robotc {:name "RobotC"
             :concurrency? true
             :liveness? false
@@ -690,15 +726,18 @@
             :monitoring? false
             :autonomy? true
             :visual? false
-            :textual? true}
-   :bluej {:name "BlueJ"
+            :textual? true
+            :arduino? true}
+   ;; NOTE(Richo): No es robótica educativa
+   #_(:bluej {:name "BlueJ"
            :concurrency? true
            :liveness? false
            :debugging? false
            :monitoring? false
            :autonomy? true
            :visual? true
-           :textual? true}
+           :textual? true
+            :arduino? false})
    :scratch {:name "Scratch/Snap/S4A"
              :concurrency? true
              :liveness? true
@@ -706,7 +745,8 @@
              :monitoring? true
              :autonomy? false
              :visual? true
-             :textual? false}
+             :textual? false
+             :arduino? true}
    ; NOTE(Richo): Los siguientes los agrego a pesar de que no hayan saltado en el mapeo
    :microblocks {:name "MicroBlocks"
                  :concurrency? true
@@ -715,7 +755,8 @@
                  :monitoring? true
                  :autonomy? true
                  :visual? true
-                 :textual? false}
+                 :textual? false
+                 :arduino? false}
    :xod {:name "XOD"
          :concurrency? true
          :liveness? false
@@ -723,7 +764,8 @@
          :monitoring? true
          :autonomy? true
          :visual? true
-         :textual? false}
+         :textual? false
+         :arduino? true}
    :snek {:name "Snek"
           :concurrency? false
           :liveness? true
@@ -731,7 +773,27 @@
           :monitoring? true
           :autonomy? true
           :visual? false
-          :textual? true}})
+          :textual? true
+          :arduino? true}})
+
+(def arduino-robots
+  (conj (set (map first (filter (fn [[key val]]
+                                  (= :arduino (:type val)))
+                                robots)))
+        :arduino))
+
+(comment
+  (clojure.set/intersection #{:a} #{:b :a})
+
+  (count (set (mapcat :tools (remove (fn [tool] (empty? (clojure.set/intersection (set (:robots tool)) arduino-robots)))
+                                     papers))))
+  (count tools)
+
+  #{:ardublockly :arduino-c :blockly :cpp
+    :crumble :enchanting :lego :mblock
+    :modkit :mvpl :phogo :pybokids :python
+    :scratch :viple}
+  )
 
 (defn age-set
   ([] #{})
@@ -1545,13 +1607,14 @@
            (th "Interactividad")
            (th "Depuración")
            (th "Visual")
-           (th "Textual")]
+           (th "Textual")
+           (th "Arduino")]
           (map (fn [{:keys [name features score]}]
                  (let [yes [:span {:style {:color "green"}} "✔"]
                        no [:span {:style {:color "red"}} "❌"]
                        bool-symbol #(if % yes no)
                        {:keys [autonomy? concurrency? monitoring?
-                               liveness? debugging? visual? textual?]} features]
+                               liveness? debugging? visual? textual? arduino?]} features]
                    [:tr {:style {:border-bottom "1px dashed grey"}}
                     (td {:style {:text-align "left"}} name)
                     (td score)
@@ -1561,26 +1624,31 @@
                     (td (bool-symbol liveness?))
                     (td (bool-symbol debugging?))
                     (td (bool-symbol visual?))
-                    (td (bool-symbol textual?))]))
+                    (td (bool-symbol textual?))
+                    (td (bool-symbol arduino?))]))
                (reverse (sort-by :score
-                                 (map (fn [[_ {:keys [name] :as features}]]
-                                        {:name name
-                                         :features features
-                                         :score (reduce + (map #(if % 1 0)
-                                                               (filter boolean? (vals features))))})
-                                      (assoc tool-features
-                                             :pbits {:name "Physical Bits"
-                                                     :autonomy? true
-                                                     :concurrency? true
-                                                     :liveness? true
-                                                     :debugging? true
-                                                     :monitoring? true
-                                                     :visual? true
-                                                     :textual? true}))))))])
+                                 (filter identity ;(comp :arduino? :features)
+                                         (map (fn [[_ {:keys [name] :as features}]]
+                                                {:name name
+                                                 :features features
+                                                 :score (reduce + (map #(if % 1 0)
+                                                                       (filter boolean? (vals features))))})
+                                              (assoc tool-features
+                                                     :pbits {:name "Physical Bits"
+                                                             :autonomy? true
+                                                             :concurrency? true
+                                                             :liveness? true
+                                                             :debugging? true
+                                                             :monitoring? true
+                                                             :visual? true
+                                                             :textual? true
+                                                             :arduino? true})))))))])
 
 
 (comment
 
+  (set (map :arduino? (vals tool-features)))
+  
   (group-by #(select-keys % [:autonomy? :concurrency? :debugging?
                              :liveness? :monitoring?])
             (vals tool-features))
