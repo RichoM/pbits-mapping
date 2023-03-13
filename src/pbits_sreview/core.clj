@@ -1562,13 +1562,21 @@
                     (td (bool-symbol debugging?))
                     (td (bool-symbol visual?))
                     (td (bool-symbol textual?))]))
-               (sort-by :score
-                        (map (fn [[_ {:keys [name] :as features}]]
-                               {:name name
-                                :features features
-                                :score (reduce + (map #(if % 1 0)
-                                                      (filter boolean? (vals features))))})
-                             tool-features))))])
+               (reverse (sort-by :score
+                                 (map (fn [[_ {:keys [name] :as features}]]
+                                        {:name name
+                                         :features features
+                                         :score (reduce + (map #(if % 1 0)
+                                                               (filter boolean? (vals features))))})
+                                      (assoc tool-features
+                                             :pbits {:name "Physical Bits"
+                                                     :autonomy? true
+                                                     :concurrency? true
+                                                     :liveness? true
+                                                     :debugging? true
+                                                     :monitoring? true
+                                                     :visual? true
+                                                     :textual? true}))))))])
 
 
 (comment
