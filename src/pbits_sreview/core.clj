@@ -1783,29 +1783,9 @@
                                             :key))
                             (sort-by :score)
                             (reverse))))
-   (row "___")
-   [:vega-lite {:data {:values (filter :arduino?
-                                       (filter #(> (:score %) 1)
-                                               (map (fn [[key {:keys [name arduino?
-                                                                      autonomy? concurrency?
-                                                                      monitoring? liveness? debugging?]}]]
-                                                      {:name name
-                                                       :arduino? arduino?
-                                                       :score (reduce + (map #(if % 1 0)
-                                                                             [autonomy? concurrency? monitoring?
-                                                                              liveness? debugging?]))})
-                                                    tool-features)))}
-                :width 300
-                :encoding {:x {:field :score
-                               :title "Características"
-                               :type "ordinal"
-                               :axis {:labelAngle -90}
-                               :sort [0 1 2 3 4]}
-                           :y {:aggregate :count
-                               :title "Cantidad de herramientas"
-                               :type "quantitative"}}
-                :layer [{:mark {:type :bar :point true :tooltip true}}]}]
-
+   
+   [:p]
+   
    (table {:style {:text-align "center" :border "solid" :border-collapse "collapse"}}
           [:tr {:style {:border-bottom "1px solid grey"}}
            (th "")
