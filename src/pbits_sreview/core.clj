@@ -800,6 +800,7 @@
   ([begin] #{begin})
   ([begin end] (set (range begin (inc end)))))
 
+
 (def papers
   (mapv #(assoc % :age-set (apply age-set (:ages %)))
         [{:id 1 :doi "10.1109/TE.2012.2190071" :year 2012
@@ -1277,16 +1278,103 @@
     "Resultados"]
    [:h4 "¿Cuántos artículos por año?"]
    (row
-    [:vega-lite {:data {:values papers}
+    [:vega-lite {:data {:values (let [years (set (map :year papers))
+                                      begin (apply min years)
+                                      end (apply max years)
+                                      relevant-papers-by-year (->> papers
+                                                                   (group-by :year)
+                                                                   (map (fn [[k v]] [k (count v)]))
+                                                                   (into {}))]
+                                  (map (fn [year]
+                                         {:year year :type "Relevantes" :value (relevant-papers-by-year year)})
+                                       (range begin (inc end))))}
                  :encoding {:x {:field :year
                                 :title "Año"
                                 :type "ordinal"}
-                            :y {:field "doi"
+                            :y {:field "value"
                                 :title "Cantidad de artículos"
-                                :aggregate "count"}
-                           ;:color {:field :year}
+                                ;:scale {:type "log"}
+                                :type "quantitative"}
+                            ;:color {:field :type}
                             }
-                 :layer [{:mark {:type :line :point true :tooltip true}}]}])
+                 :layer [{:mark {:type :line :point true :tooltip true}}]}]
+    [:vega-lite {:data {:values (let [years (set (map :year papers))
+                                      begin (apply min years)
+                                      end (apply max years)
+                                      relevant-papers-by-year (->> papers
+                                                                   (group-by :year)
+                                                                   (map (fn [[k v]] [k (count v)]))
+                                                                   (into {}))]
+                                  (map (fn [year]
+                                         {:year year ;:type "Proporción"
+                                          :value (/ (relevant-papers-by-year year)
+                                                    (total-papers-by-year year)
+                                                    1.0)})
+                                       (range begin (inc end))))}
+                 :encoding {:x {:field :year
+                                :title "Año"
+                                :type "ordinal"}
+                            :y {:field "value"
+                                :title "Artículos relevantes sobre el total"
+                                :axis {:format "%"}
+                                :type "quantitative"}
+                            ;:color {:field :type}
+                            }
+                 :layer [{:mark {:type :line :point true :tooltip true}}]}]
+    [:vega-lite {:data {:values (let [years (set (map :year papers))
+                                      begin (apply min years)
+                                      end (apply max years)
+                                      relevant-papers-by-year (->> papers
+                                                                   (group-by :year)
+                                                                   (map (fn [[k v]] [k (count v)]))
+                                                                   (into {}))]
+                                  (mapcat (fn [year]
+                                            [{:year year :type "Total" :value (total-papers-by-year year)}
+                                             {:year year :type "Relevantes" :value (relevant-papers-by-year year)}])
+                                          (range begin (inc end)))
+                                  #_(map (fn [year]
+                                           {:year year ;:type "Proporción"
+                                            :value (/ (relevant-papers-by-year year)
+                                                      (total-papers-by-year year)
+                                                      1.0)})
+                                         (range begin (inc end))))}
+                 :encoding {:x {:field :year
+                                :title "Año"
+                                :type "ordinal"}
+                            :y {:field "value"
+                                :title "Cantidad de artículos"
+                                :scale {:type "log"}
+                                :type "quantitative"}
+                            :color {:field :type}}
+                 :layer [{:mark {:type :line :point true :tooltip true}}]}]
+    [:vega-lite {:data {:values (let [years (set (map :year papers))
+                                      begin (apply min years)
+                                      end (apply max years)
+                                      relevant-papers-by-year (->> papers
+                                                                   (group-by :year)
+                                                                   (map (fn [[k v]] [k (count v)]))
+                                                                   (into {}))]
+                                  (map (fn [year]
+                                         {:year year 
+                                          :relevant (relevant-papers-by-year year)
+                                          :total (total-papers-by-year year)})
+                                       (range begin (inc end))))}
+                 :encoding {:x {:field :year
+                                :title "Año"
+                                :type "ordinal"}}
+                 :layer [{:mark {:type :line :tooltip true
+                                 :color "#1F77B4"}
+                          :encoding {:y {:field :relevant
+                                         :title "Artículos relevantes"
+                                         :type "quantitative"
+                                         :axis {:titleColor "#1F77B4"}}}}
+                         {:mark {:type :line :tooltip true
+                                 :color "#FF7F0E"}                          
+                          :encoding {:y {:field :total
+                                         :title "Artículos totales"
+                                         :type "quantitative"
+                                         :axis {:titleColor "#FF7F0E"}}}}]
+                 :resolve {:scale {:y "independent"}}}])
 
    [:h4 "¿Cuántos artículos por edad de alumno?"]
    (row
@@ -1769,7 +1857,7 @@
 
 (comment
 
-  (m/component (m/md->hiccup "*richo*")))
+  (m/component (m/md->hiccup "*richo*"))
   (m/md->hiccup "*richo*")
   (def table-data *1)
 
