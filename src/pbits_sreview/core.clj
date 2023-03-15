@@ -1345,36 +1345,36 @@
                      :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
                              {:mark {:type :text :radius 75 :fill "black"}}]}]
         #_[:vega-lite {:data {:values (let [data (->> (vals tools)
-                                                    (map #(assoc % :dsl?
-                                                                 (boolean
-                                                                  (or (:visual-dsl? %)
-                                                                      (:textual-dsl? %)))))
-                                                    (group-by :dsl?)
-                                                    (map (fn [[dsl? tools]]
-                                                           [dsl? (count tools)]))
-                                                    (into {}))
-                                          total (reduce + (vals data))]
-                                      (map (fn [[dsl? count]]
-                                             {:type (if dsl?
-                                                      "Dominio específico"
-                                                      "Propósito general")
-                                              :count count
-                                              :text (percent (/ count total))})
-                                           data))}
-                     :title "Todas las herramientas"
-                     :encoding {:theta {:field :count
-                                        :type "quantitative"
-                                        :stack "normalize"}
-                                :order {:field :count
-                                        :type "quantitative"
-                                        :sort "descending"}
-                                :color {:field :type
-                                        :title "Tipo de herramienta"
-                                        :sort {:field :count
-                                               :order "descending"}}
-                                :text {:field :text :type "nominal"}}
-                     :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
-                             {:mark {:type :text :radius 75 :fill "black"}}]}])
+                                                      (map #(assoc % :dsl?
+                                                                   (boolean
+                                                                    (or (:visual-dsl? %)
+                                                                        (:textual-dsl? %)))))
+                                                      (group-by :dsl?)
+                                                      (map (fn [[dsl? tools]]
+                                                             [dsl? (count tools)]))
+                                                      (into {}))
+                                            total (reduce + (vals data))]
+                                        (map (fn [[dsl? count]]
+                                               {:type (if dsl?
+                                                        "Dominio específico"
+                                                        "Propósito general")
+                                                :count count
+                                                :text (percent (/ count total))})
+                                             data))}
+                       :title "Todas las herramientas"
+                       :encoding {:theta {:field :count
+                                          :type "quantitative"
+                                          :stack "normalize"}
+                                  :order {:field :count
+                                          :type "quantitative"
+                                          :sort "descending"}
+                                  :color {:field :type
+                                          :title "Tipo de herramienta"
+                                          :sort {:field :count
+                                                 :order "descending"}}
+                                  :text {:field :text :type "nominal"}}
+                       :layer [{:mark {:type :arc :innerRadius 50 :point true :tooltip true}}
+                               {:mark {:type :text :radius 75 :fill "black"}}]}])
 
    [:h4 "¿Qué tipos de lenguajes visuales soportan los entornos relevados?"]
    (row [:vega-lite {:data {:values (let [data (->> (vals tools)
@@ -1648,13 +1648,15 @@
                                     :name name
                                     :features features
                                     :score (reduce + (map #(if % 1 0)
-                                                          (filter boolean? (vals features))))
+                                                          (vals (select-keys features
+                                                                             [:autonomy? :concurrency? :monitoring?
+                                                                              :liveness? :debugging?]))))
                                     :type (if (= key :pbits)
                                             "Híbrido (Bloques - Otro)"
                                             (let [{:keys [visual? textual?
                                                           visual-type textual-type]}
                                                   (tools key)
-                                                  
+
                                                   textual-type (case textual-type
                                                                  :aseba "Aseba"
                                                                  :basic "BASIC"
@@ -1679,57 +1681,126 @@
                             #_(remove (comp (set (keys (filter (comp :tangible? second) tools)))
                                             :key))
                             (sort-by :score)
+                            (reverse))))
+   (row "___")
+   [:vega-lite {:data {:values (filter :arduino?
+                                       (filter #(> (:score %) 1)
+                                               (map (fn [[key {:keys [name arduino?
+                                                                      autonomy? concurrency?
+                                                                      monitoring? liveness? debugging?]}]]
+                                                      {:name name
+                                                       :arduino? arduino?
+                                                       :score (reduce + (map #(if % 1 0)
+                                                                             [autonomy? concurrency? monitoring?
+                                                                              liveness? debugging?]))})
+                                                    tool-features)))}
+                :width 300
+                :encoding {:x {:field :score
+                               :title "Características"
+                               :type "ordinal"
+                               :axis {:labelAngle -90}
+                               :sort [0 1 2 3 4]}
+                           :y {:aggregate :count
+                               :title "Cantidad de herramientas"
+                               :type "quantitative"}}
+                :layer [{:mark {:type :bar :point true :tooltip true}}]}]
+
+   (table {:style {:text-align "center" :border "solid" :border-collapse "collapse"}}
+          [:tr {:style {:border-bottom "1px solid grey"}}
+           (th "")
+           (th "Herramientas")
+           (th "A")
+           (th "C")
+           (th "M")
+           (th "I")
+           (th "D")]
+          (map-indexed (fn [idx {:keys [tools features]}]
+                         (let [yes [:span {:style {:color "green"}} "✔"]
+                               no [:span {:style {:color "red"}} "❌"]
+                               bool-symbol #(if % yes no)
+                               {:keys [autonomy? concurrency? monitoring?
+                                       liveness? debugging? arduino?]} features]
+                           [:tr {:style {:border-bottom "1px dashed grey"}}
+                            (td (inc idx))
+                            (td {:style {:text-align "left"}}
+                                (str/join ", " tools))
+                            (td (bool-symbol autonomy?))
+                            (td (bool-symbol concurrency?))
+                            (td (bool-symbol monitoring?))
+                            (td (bool-symbol liveness?))
+                            (td (bool-symbol debugging?))]))
+                       (->> (assoc tool-features
+                                   :pbits {:name "Physical Bits"
+                                           :autonomy? true
+                                           :concurrency? true
+                                           :liveness? true
+                                           :debugging? true
+                                           :monitoring? true
+                                           :visual? true
+                                           :textual? true
+                                           :arduino? true})
+                            (map (fn [[_ {:keys [name] :as features}]]
+                                   {:name name
+                                    :features (select-keys features [:autonomy? :concurrency? :monitoring?
+                                                                     :liveness? :debugging?])}))
+                            (group-by :features)
+                            (map (fn [[features tools]]
+                                   {:features features
+                                    :score (reduce + (map #(if % 1 0) (vals features)))
+                                    :count (count tools)
+                                    :tools (map :name tools)}))
+                            (sort-by :count)
+                            (sort-by :score)
                             (reverse))))])
 
 
 (comment
 
-  (map (fn [[key {:keys [visual? textual? 
-                         visual-type textual-type]}]]
-         (let [textual-type (case textual-type
-                              :aseba "Aseba"
-                              :basic "BASIC"
-                              :python "Python"
-                              :cpp "C/C++"
-                              :csharp "C#"
-                              :java "Java"
-                              :js "Javascript"
-                              "Otro")
-               visual-type (case visual-type
-                             :blocks "Bloques"
-                             :diagram "Diagrama"
-                             :icons "Iconográfico"
-                             :form "Formulario"
-                             "Otro")]
-           (case (mapv boolean [visual? textual?])
-             [true true] (str "Híbrido (" visual-type "/" textual-type ")")
-             [true false] (str "Visual (" visual-type ")")
-             [false true] (str "Texual (" textual-type ")")
-             [false false] key)))
-       tools)
+  (m/component (m/md->hiccup "*richo*")))
+  (m/md->hiccup "*richo*")
+  (def table-data *1)
 
-  (remove (set (keys (filter (comp :tangible? second) tools)))
-          [:tern])
+  tool-features
 
-  (boolean nil)
+  (count (set (map (comp #(mapv % [:autonomy? :concurrency? :monitoring?
+                                   :liveness? :debugging?])
+                         :features)
+                   table-data)))
 
-  (set (map :arduino? (vals tool-features)))
+  (->> (assoc tool-features
+              :pbits {:name "Physical Bits"
+                      :autonomy? true
+                      :concurrency? true
+                      :liveness? true
+                      :debugging? true
+                      :monitoring? true
+                      :visual? true
+                      :textual? true
+                      :arduino? true})
+       (map (fn [[_ {:keys [name] :as features}]]
+              {:name name
+               :features (select-keys features [:autonomy? :concurrency? :monitoring?
+                                                :liveness? :debugging?])}))
+       (group-by :features)
+       (map (fn [[features tools]]
+              {:features features
+               :score (reduce + (map #(if % 1 0) (vals features)))
+               :count (count tools)
+               :tools (map :name tools)}))
+       (sort-by :score)
+       (reverse))
 
-  (group-by #(select-keys % [:autonomy? :concurrency? :debugging?
-                             :liveness? :monitoring?])
-            (vals tool-features))
-  (def groups *1)
-
-  (count groups)
-  (count tool-features)
-
-  (map (fn [[key items]] [key (count items)])
-       groups)
-
-  (filter (fn [[key count]] (>= count 3))
-          (map (fn [[key items]] [key (count items)])
-               groups))
-
+  
+  (clojure.string/join ", " 
+                       '("Arduino IDE (C/C++)"
+                         "Ardublockly"
+                         "Crumble"
+                         "PROTEAS"
+                         "mBlock 3"
+                         "PICAXE Programming Editor"
+                         "Tern"
+                         "ZR graphical editor"
+                         "CHERP"))
 
   )
 
