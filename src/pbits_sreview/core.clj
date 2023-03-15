@@ -1164,6 +1164,17 @@
           (when-not (contains? robots robot)
             (println "Paper" (:id paper) "has invalid robot" robot)))))))
 
+(def total-papers-by-year
+  {2012 207
+   2013 183
+   2014 237
+   2015 300
+   2016 309
+   2017 379
+   2018 415
+   2019 557
+   2020 537
+   2021 635})
 
 (defn tool-types-by-age []
   (mapcat (fn [age]
