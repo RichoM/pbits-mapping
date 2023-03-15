@@ -1561,13 +1561,15 @@
                                          :debugging? "Depuración"
                                          :liveness? "Interactividad"
                                          :monitoring? "Monitoreo"}]
-                      {:data {:values (let [features [:autonomy? :concurrency? :debugging?
-                                                      :liveness? :monitoring?]
+                      {:data {:values (let [features [:autonomy? :concurrency? :monitoring?
+                                                      :liveness? :debugging?]
                                             total (count tool-features)]
-                                        (for [x features, y features
-                                              ;:when (not= x y)
-                                              ]
-                                          (let [count (count (filter #(and (x %) (y %))
+                                        (for [i (range (count features)),
+                                              j (range (count features))
+                                              :when (>= i j)]
+                                          (let [x (nth features i)
+                                                y (nth features j)
+                                                count (count (filter #(and (x %) (y %))
                                                                      (vals tool-features)))]
                                             {:x (feature->text x)
                                              :y (feature->text y)
