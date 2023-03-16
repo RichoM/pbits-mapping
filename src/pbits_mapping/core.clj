@@ -1,4 +1,4 @@
-(ns pbits-sreview.core
+(ns pbits-mapping.core
   (:require [oz.core :as oz]
             [oz.server :as server]
             [markdown-to-hiccup.core :as m]
