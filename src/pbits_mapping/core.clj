@@ -3,13 +3,52 @@
             [oz.server :as server]
             [markdown-to-hiccup.core :as m]
             [clojure.string :as str]
+            [clojure.data.csv :as csv]
+            [clojure.java.io :as io]
             [clojure.data :as data])
   (:gen-class))
 
 (when-not (server/web-server-started?)
   (oz/start-server!))
 
-(def robots 
+(defn csv-data->maps [csv-data]
+  (map zipmap
+       (->> (first csv-data) ;; First row is the header
+            (map #(str/replace-first % #"^:" ""))
+            (map keyword) ;; Drop if you want string keys instead
+            repeat)
+       (rest csv-data)))
+
+(def paper-data (->> (with-open [reader (io/reader "data.csv")]
+                       (doall (csv-data->maps (csv/read-csv reader))))
+                     (map (fn [paper]
+                            (assoc paper :AUTHORS
+                                   (let [author-names (:author_names paper)]
+                                     (if (str/blank? author-names)
+                                       [(:creator paper)]
+                                       (str/split author-names #";"))))))
+                     (map (fn [paper]
+                            (let [authors (str/join ", " (:AUTHORS paper))
+                                  year (:YEAR paper)
+                                  title (:title paper)
+                                  publication-name (:publicationName paper)
+                                  page-range (:pageRange paper)
+                                  volume (:volume paper)
+                                  number (:issueIdentifier paper)
+                                  display-date (:coverDisplayDate paper)
+                                  doi (:doi paper)]
+                              (assoc paper :CITATION
+                                     (format "%s,\"%s\" in %s, vol. %s, no. %s, pp. %s, %s, doi: %s"
+                                             authors
+                                             title
+                                             publication-name
+                                             volume
+                                             number
+                                             page-range
+                                             display-date
+                                             doi)))))))
+
+(def robots
   {:custom {:name "Robot personalizado" :type :custom}
    :nxt {:name "LEGO Mindstorms NXT" :type :lego}
    :rcx {:name "LEGO Mindstorms RCX" :type :lego}
@@ -58,8 +97,7 @@
    :bioloid {:name "Robotis Bioloid" :type :kit}
    :microbit {:name "BBC micro:bit" :type :kit}
    :crumble {:name "Crumble robot" :type :kit}
-   :talkoo {:name "Talkoo kit" :type :custom
-            }
+   :talkoo {:name "Talkoo kit" :type :custom}
    :bluebot {:name "Blue-Bot" ; Es como el beebot pero con app mobile
              :type :toy}
    :roamer {:name "Roamer" ; Como beebot pero con un teclado intercambiable
@@ -89,9 +127,7 @@
    :cozmo {:name "Cozmo" :type :toy}
    :parrot {:name "Parrot Bebop" :type :drone}
    :irobot {:name "iRobot Create" :type :vacuum-cleaner}
-   :doc {:name "Robot DOC" :type :toy}
-
-   })
+   :doc {:name "Robot DOC" :type :toy}})
 
 
 ;; :s4a, :snap y :scrath -> :scratch
@@ -125,9 +161,9 @@
            :visual-dsl? true
            :visual-type :icons}
    :lego {:name "LEGO Mindstorms"
-           :visual? true
-           :visual-dsl? true
-           :visual-type :blocks}
+          :visual? true
+          :visual-dsl? true
+          :visual-type :blocks}
    :mvpl {:name "Microsoft Visual Programming Language"
           :visual? true
           :visual-dsl? true
@@ -169,9 +205,9 @@
                  :visual-dsl? true
                  :visual-type :blocks}
    :scratch {:name "Scratch/Snap/S4A"
-         :visual? true
-         :visual-dsl? true
-         :visual-type :blocks}   
+             :visual? true
+             :visual-dsl? true
+             :visual-type :blocks}
    :wedo {:name "Lego WeDo software"
           :visual? true
           :visual-dsl? true
@@ -183,7 +219,7 @@
    :enchanting {:name "Enchanting"
                 :visual? true
                 :visual-dsl? true
-                :visual-type :blocks} 
+                :visual-type :blocks}
    :modkit {:name "Modkit"
             :textual? true
             :textual-dsl? true
@@ -334,9 +370,7 @@
         (when-not (contains? #{:blocks :diagram :icons :form} visual-type)
           (println "Invalid visual type!" name "->" visual-type))))
     (when-not (or tangible? textual? visual?)
-      (println "WTF!" name)))
-  
-)
+      (println "WTF!" name))))
 
 ;; saco :sphero-oop :pybokids :python :cpp :blockly :appinventor :vedils :bluej
 (def tool-features
@@ -700,7 +734,7 @@
              :autonomy? true
              :visual? true
              :textual? false
-            :arduino? true}
+             :arduino? true}
    :eud-mars {:name "EUD-MARS"
               :concurrency? true
               :liveness? false
@@ -730,14 +764,14 @@
             :arduino? true}
    ;; NOTE(Richo): No es robótica educativa
    #_(:bluej {:name "BlueJ"
-           :concurrency? true
-           :liveness? false
-           :debugging? false
-           :monitoring? false
-           :autonomy? true
-           :visual? true
-           :textual? true
-            :arduino? false})
+              :concurrency? true
+              :liveness? false
+              :debugging? false
+              :monitoring? false
+              :autonomy? true
+              :visual? true
+              :textual? true
+              :arduino? false})
    :scratch {:name "Scratch/Snap/S4A"
              :concurrency? true
              :liveness? true
@@ -792,8 +826,7 @@
   #{:ardublockly :arduino-c :blockly :cpp
     :crumble :enchanting :lego :mblock
     :modkit :mvpl :phogo :pybokids :python
-    :scratch :viple}
-  )
+    :scratch :viple})
 
 (defn age-set
   ([] #{})
@@ -974,7 +1007,7 @@
          {:id 42 :doi "10.1049/trit.2018.0016" :year 2018
           :ages [14 18]
           :tools [:viple]
-          :robots [:ev3 :galileo :raspberry :pcDuino :minnow 
+          :robots [:ev3 :galileo :raspberry :pcDuino :minnow
                    :curie :edison :bioloid :arduino-uno :arduino-mega :arduino-duo]}
          {:id 43 :doi "10.1145/3211332.3211335" :year 2018
           :ages nil
@@ -1140,8 +1173,7 @@
          {:id 83 :doi "10.1007/s10758-021-09508-3" :year 2021
           :ages [15 19]
           :tools [:blockly :python]
-          :robots [:arduino-mega :raspberry]}
-         ]))
+          :robots [:arduino-mega :raspberry]}]))
 
 (do ; Verify papers
   (when-not (= (set (conj (keys robots) :arduino :lego))
@@ -1237,7 +1269,7 @@
 
 (defn table [& content]
   (let [attrs (first content)
-        base-attrs {:style {:border "solid" 
+        base-attrs {:style {:border "solid"
                             :border-collapse "collapse"}}]
     (if (map? attrs)
       [:table (merge-with merge base-attrs attrs) (next content)]
@@ -1355,7 +1387,7 @@
                                                                    (map (fn [[k v]] [k (count v)]))
                                                                    (into {}))]
                                   (map (fn [year]
-                                         {:year year 
+                                         {:year year
                                           :relevant (relevant-papers-by-year year)
                                           :total (total-papers-by-year year)})
                                        (range begin (inc end))))}
@@ -1369,7 +1401,7 @@
                                          :type "quantitative"
                                          :axis {:titleColor "#1F77B4"}}}}
                          {:mark {:type :line :tooltip true
-                                 :color "#FF7F0E"}                          
+                                 :color "#FF7F0E"}
                           :encoding {:y {:field :total
                                          :title "Artículos totales"
                                          :type "quantitative"
@@ -1783,9 +1815,9 @@
                                             :key))
                             (sort-by :score)
                             (reverse))))
-   
+
    [:p]
-   
+
    (table {:style {:text-align "center" :border "solid" :border-collapse "collapse"}}
           [:tr {:style {:border-bottom "1px solid grey"}}
            (th "")
@@ -1832,58 +1864,12 @@
                                     :tools (map :name tools)}))
                             (sort-by :count)
                             (sort-by :score)
-                            (reverse))))])
+                            (reverse))))
 
+   [:h4 "Artículos"]
+   [:ol (map (fn [paper] [:li (:CITATION paper)])
+             paper-data)]])
 
-(comment
-
-  (m/component (m/md->hiccup "*richo*"))
-  (m/md->hiccup "*richo*")
-  (def table-data *1)
-
-  tool-features
-
-  (count (set (map (comp #(mapv % [:autonomy? :concurrency? :monitoring?
-                                   :liveness? :debugging?])
-                         :features)
-                   table-data)))
-
-  (->> (assoc tool-features
-              :pbits {:name "Physical Bits"
-                      :autonomy? true
-                      :concurrency? true
-                      :liveness? true
-                      :debugging? true
-                      :monitoring? true
-                      :visual? true
-                      :textual? true
-                      :arduino? true})
-       (map (fn [[_ {:keys [name] :as features}]]
-              {:name name
-               :features (select-keys features [:autonomy? :concurrency? :monitoring?
-                                                :liveness? :debugging?])}))
-       (group-by :features)
-       (map (fn [[features tools]]
-              {:features features
-               :score (reduce + (map #(if % 1 0) (vals features)))
-               :count (count tools)
-               :tools (map :name tools)}))
-       (sort-by :score)
-       (reverse))
-
-  
-  (clojure.string/join ", " 
-                       '("Arduino IDE (C/C++)"
-                         "Ardublockly"
-                         "Crumble"
-                         "PROTEAS"
-                         "mBlock 3"
-                         "PICAXE Programming Editor"
-                         "Tern"
-                         "ZR graphical editor"
-                         "CHERP"))
-
-  )
 
 (defn redraw! []
   (println "REDRAW!")
@@ -1898,6 +1884,47 @@
 (comment
 
   (redraw!)
-  (oz/export! (generate-vega-doc) "index.html")
+  (oz/export! (generate-vega-doc) "index.html"))
 
-  )
+(comment
+
+
+  (count (filter (comp empty? :AUTHORS) paper-data))
+  
+  (map (fn [paper]
+         (let [authors (str/join ", " (:AUTHORS paper))
+               year (:YEAR paper)
+               title (:title paper)
+               publication-name (:publicationName paper)
+               page-range (:pageRange paper)
+               volume (:volume paper)
+               number (:issueIdentifier paper)
+               display-date (:coverDisplayDate paper)
+               doi (:doi paper)]
+           (format "%s,\"%s\" in %s, vol. %s, no. %s, pp. %s, %s, doi: %s"
+             authors
+             title
+             publication-name
+             volume
+             number
+             page-range
+             display-date
+             doi)))
+       paper-data)
+
+  """
+  (keys (first paper-data))
+  (map (fn [paper]
+         (assoc paper :AUTHORS
+                (let [author-names (:author_names paper)]
+                  (if (str/blank? author-names)
+                    [(:creator paper)]
+                    (str/split author-names #";")))))
+       paper-data)
+
+  (count paper-data)
+
+  (doseq [a (map :author_names paper-data)]
+    (println a))
+
+  (count (filter (comp str/blank? :author_names) paper-data)))
