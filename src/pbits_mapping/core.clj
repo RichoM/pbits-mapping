@@ -38,15 +38,20 @@
                                   display-date (:coverDisplayDate paper)
                                   doi (:doi paper)]
                               (assoc paper :CITATION
-                                     (format "%s,\"%s\" in %s, vol. %s, no. %s, pp. %s, %s, doi: %s"
-                                             authors
-                                             title
-                                             publication-name
-                                             volume
-                                             number
-                                             page-range
-                                             display-date
-                                             doi)))))))
+                                     (str/join ", "
+                                               (remove str/blank?
+                                                       [authors
+                                                        (format "\"%s,\" in %s" title publication-name)
+                                                        (when-not (str/blank? volume)
+                                                          (str "vol. " volume))
+                                                        (when-not (str/blank? number)
+                                                          (str "no. " number))
+                                                        (when-not (str/blank? page-range)
+                                                          (str "pp. " page-range))
+                                                        (when-not (str/blank? display-date)
+                                                          display-date)
+                                                        (when-not (str/blank? doi)
+                                                          (str "doi: " doi))]))))))))
 
 (def robots
   {:custom {:name "Robot personalizado" :type :custom}
@@ -1884,47 +1889,6 @@
 (comment
 
   (redraw!)
-  (oz/export! (generate-vega-doc) "index.html"))
-
-(comment
-
-
-  (count (filter (comp empty? :AUTHORS) paper-data))
+  (oz/export! (generate-vega-doc) "index.html")
   
-  (map (fn [paper]
-         (let [authors (str/join ", " (:AUTHORS paper))
-               year (:YEAR paper)
-               title (:title paper)
-               publication-name (:publicationName paper)
-               page-range (:pageRange paper)
-               volume (:volume paper)
-               number (:issueIdentifier paper)
-               display-date (:coverDisplayDate paper)
-               doi (:doi paper)]
-           (format "%s,\"%s\" in %s, vol. %s, no. %s, pp. %s, %s, doi: %s"
-             authors
-             title
-             publication-name
-             volume
-             number
-             page-range
-             display-date
-             doi)))
-       paper-data)
-
-  """
-  (keys (first paper-data))
-  (map (fn [paper]
-         (assoc paper :AUTHORS
-                (let [author-names (:author_names paper)]
-                  (if (str/blank? author-names)
-                    [(:creator paper)]
-                    (str/split author-names #";")))))
-       paper-data)
-
-  (count paper-data)
-
-  (doseq [a (map :author_names paper-data)]
-    (println a))
-
-  (count (filter (comp str/blank? :author_names) paper-data)))
+  )
