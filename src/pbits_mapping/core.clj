@@ -1753,7 +1753,7 @@
            ;(th "T")
            (th "Tipo de lenguaje")]
           (map-indexed (fn [idx {:keys [name features type score]}]
-                         (let [yes [:span {:style {:color "green"}} "✔"]
+                         (let [yes [:span {:style {:color "green"}} "✔️"]
                                no [:span {:style {:color "red"}} "❌"]
                                bool-symbol #(if % yes no)
                                {:keys [autonomy? concurrency? monitoring?
@@ -1833,7 +1833,7 @@
            (th "I")
            (th "D")]
           (map-indexed (fn [idx {:keys [tools features]}]
-                         (let [yes [:span {:style {:color "green"}} "✔"]
+                         (let [yes [:span {:style {:color "green"}} "✔️"]
                                no [:span {:style {:color "red"}} "❌"]
                                bool-symbol #(if % yes no)
                                {:keys [autonomy? concurrency? monitoring?
