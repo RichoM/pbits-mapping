@@ -1294,9 +1294,9 @@
 (defn td [& content]
   (let [attrs (first content)
         base-attrs {:style {:border-right "1px solid black"
-                            :border-bottom "1px solid black"
+                            ;:border-bottom "1px solid black"
                             :border-left "1px solid black"
-                            :border-top "1px solid black"
+                            ;:border-top "1px solid black"
                             :border-collapse "collapse"}}]
     (if (map? attrs)
       [:td (merge-with merge base-attrs attrs) (next content)]
@@ -1758,8 +1758,9 @@
                                bool-symbol #(if % yes no)
                                {:keys [autonomy? concurrency? monitoring?
                                        liveness? debugging? arduino?]} features
-                               td-style {:style {:background-color (if arduino? "bisque" "white")}}]
-                           [:tr {:style {:border-bottom "1px dashed grey"}}
+                               td-style {:style {:background-color (if arduino? "bisque" "white")
+                                                 :border-bottom "1px dashed grey"}}]
+                           [:tr #_{:style {:border-bottom "1px dashed grey"}}
                             (td td-style (inc idx))
                             (td (assoc-in td-style [:style :text-align] "left")
                                 name)
@@ -1837,16 +1838,17 @@
                                no [:span {:style {:color "red"}} "❌"]
                                bool-symbol #(if % yes no)
                                {:keys [autonomy? concurrency? monitoring?
-                                       liveness? debugging? arduino?]} features]
-                           [:tr {:style {:border-bottom "1px dashed grey"}}
-                            (td (inc idx))
-                            (td {:style {:text-align "left"}}
+                                       liveness? debugging? arduino?]} features
+                               td-style {:style {:border-bottom "1px dashed grey"}}]
+                           [:tr #_{:style {:border-bottom "1px dashed grey"}}
+                            (td td-style (inc idx))
+                            (td (assoc-in td-style [:style :text-align] "left")
                                 (str/join ", " tools))
-                            (td (bool-symbol autonomy?))
-                            (td (bool-symbol concurrency?))
-                            (td (bool-symbol monitoring?))
-                            (td (bool-symbol liveness?))
-                            (td (bool-symbol debugging?))]))
+                            (td td-style (bool-symbol autonomy?))
+                            (td td-style (bool-symbol concurrency?))
+                            (td td-style (bool-symbol monitoring?))
+                            (td td-style (bool-symbol liveness?))
+                            (td td-style (bool-symbol debugging?))]))
                        (->> (assoc tool-features
                                    :pbits {:name "Physical Bits"
                                            :autonomy? true
