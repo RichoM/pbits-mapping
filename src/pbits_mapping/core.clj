@@ -1772,16 +1772,16 @@
                             #_(td td-style (bool-symbol visual?))
                             #_(td td-style (bool-symbol textual?))
                             (td td-style type)]))
-                       (->> (assoc tool-features
-                                   :pbits {:name "Physical Bits"
-                                           :autonomy? true
-                                           :concurrency? true
-                                           :liveness? true
-                                           :debugging? true
-                                           :monitoring? true
-                                           :visual? true
-                                           :textual? true
-                                           :arduino? true})
+                       (->> tool-features #_(assoc tool-features
+                                                   :pbits {:name "Physical Bits"
+                                                           :autonomy? true
+                                                           :concurrency? true
+                                                           :liveness? true
+                                                           :debugging? true
+                                                           :monitoring? true
+                                                           :visual? true
+                                                           :textual? true
+                                                           :arduino? true})
                             (map (fn [[key {:keys [name] :as features}]]
                                    {:key key
                                     :name name
@@ -1849,16 +1849,16 @@
                             (td td-style (bool-symbol monitoring?))
                             (td td-style (bool-symbol liveness?))
                             (td td-style (bool-symbol debugging?))]))
-                       (->> (assoc tool-features
-                                   :pbits {:name "Physical Bits"
-                                           :autonomy? true
-                                           :concurrency? true
-                                           :liveness? true
-                                           :debugging? true
-                                           :monitoring? true
-                                           :visual? true
-                                           :textual? true
-                                           :arduino? true})
+                       (->> tool-features #_(assoc tool-features
+                                                   :pbits {:name "Physical Bits"
+                                                           :autonomy? true
+                                                           :concurrency? true
+                                                           :liveness? true
+                                                           :debugging? true
+                                                           :monitoring? true
+                                                           :visual? true
+                                                           :textual? true
+                                                           :arduino? true})
                             (map (fn [[_ {:keys [name] :as features}]]
                                    {:name name
                                     :features (select-keys features [:autonomy? :concurrency? :monitoring?
