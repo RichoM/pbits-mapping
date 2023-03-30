@@ -19,6 +19,14 @@
             repeat)
        (rest csv-data)))
 
+(def indexed-by
+  (memoize
+   (fn [unique-key data]
+     (->> data
+          (group-by unique-key)
+          (map (fn [[doi [row]]] [doi row]))
+          (into {})))))
+
 (def paper-data (->> (with-open [reader (io/reader "data.csv")]
                        (doall (csv-data->maps (csv/read-csv reader))))
                      (map (fn [paper]
@@ -132,10 +140,15 @@
    :cozmo {:name "Cozmo" :type :toy}
    :parrot {:name "Parrot Bebop" :type :drone}
    :irobot {:name "iRobot Create" :type :vacuum-cleaner}
-   :doc {:name "Robot DOC" :type :toy}})
+   :doc {:name "Robot DOC" :type :toy}
+   :korean {:name "Unknown" :type :toy ; Este no ponen el nombre en el paper
+            }
+   :robbo {:name "Robbo (ScratchDuino)" :type :arduino}
+   :turtlebot {:name "TurtleBot" :type :toy}
+   :geombot {:name "GeomBot" :type :arduino}})
 
 
-;; :s4a, :snap y :scrath -> :scratch
+;; :s4a, :snap y :scratch -> :scratch
 ;; :ev3 y :nxt-g   -> :lego
 ;; :nqc y :nxc  ->  :nqc
 ;; agrego :microblocks :xod :snek
@@ -821,18 +834,6 @@
                                 robots)))
         :arduino))
 
-(comment
-  (clojure.set/intersection #{:a} #{:b :a})
-
-  (count (set (mapcat :tools (remove (fn [tool] (empty? (clojure.set/intersection (set (:robots tool)) arduino-robots)))
-                                     papers))))
-  (count tools)
-
-  #{:ardublockly :arduino-c :blockly :cpp
-    :crumble :enchanting :lego :mblock
-    :modkit :mvpl :phogo :pybokids :python
-    :scratch :viple})
-
 (defn age-set
   ([] #{})
   ([begin] #{begin})
@@ -841,344 +842,394 @@
 
 (def papers
   (mapv #(assoc % :age-set (apply age-set (:ages %)))
-        [{:id 1 :doi "10.1109/TE.2012.2190071" :year 2012
-          :ages [6 7]
-          :tools [:tangible]
-          :robots [:custom]}
-         {:id 2 :doi "10.1109/TLT.2011.28" :year 2012
-          :ages [11 13]
-          :tools [:nqc]
-          :robots [:nxt]}
-         {:id 3 :doi "10.1007/s00779-011-0404-2" :year 2012
-          :ages [4 7]
-          :tools [:tern]
-          :robots [:rcx]}
-         {:id 4 :doi "10.5755/j01.eee.18.9.2825" :year 2012
+        [{:id 1 :doi "10.5755/j01.eee.18.9.2825" :year 2012
           :ages [16 17]
           :tools [:robotc]
           :robots [:nxt]}
-         {:id 5 :doi "10.1016/j.actaastro.2012.09.006" :year 2013
-          :ages [13 17]
-          :tools [:cpp :zr]
-          :robots [:spheres]}
-         {:id 6 :doi "10.1080/15391523.2013.10782614" :year 2013
-          :ages [4 6]
-          :tools [:cherp]
-          :robots [:lego]}
-         {:id 6.5 :doi "10.1109/TLA.2013.6502866" :year 2013
-          :ages [18]
-          :tools [:pynxc]
+         {:id 2 :doi "10.1007/s00779-011-0404-2" :year 2012
+          :ages [4 7]
+          :tools [:tern]
+          :robots [:rcx]}
+         {:id 3 :doi "10.1109/TLT.2011.28" :year 2012
+          :ages [11 13]
+          :tools [:nqc]
           :robots [:nxt]}
-         {:id 7 :doi "10.1080/08993408.2013.847165" :year 2013
-          :ages [14 15]
-          :tools [:robotc]
-          :robots [:vex]}
-         {:id 8 :doi "10.1080/08993408.2013.847152" :year 2013
+         {:id 4 :doi "10.1109/TE.2012.2190071" :year 2012
+          :ages [6 7]
+          :tools [:tangible]
+          :robots [:custom]}
+         {:id 5 :doi "10.1080/08993408.2013.847152" :year 2013
           :ages [9 13]
           :tools [:lego]
           :robots [:nxt]}
-         {:id 9 :doi "10.5755/j01.eee.20.1.6169" :year 2014
+         {:id 6 :doi "10.1080/08993408.2013.847165" :year 2013
+          :ages [14 15]
+          :tools [:robotc]
+          :robots [:vex]}
+         {:id 7 :doi "10.1007/s13384-013-0094-z" :year 2013
+          :ages [8 9]
+          :tools [:lego]
+          :robots [:nxt]}
+         {:id 8 :doi "10.1109/TLA.2013.6502866" :year 2013
           :ages [18]
-          :tools [:lego :mvpl :arduino-c]
-          :robots [:nxt :4wd :5la]}
-         {:id 10 :doi "10.5772/58249" :year 2014
-          :ages [18]
-          :tools [:labview :robolab :lego :robotc :nqc]
-          :robots [:controllab :rcx :nxt :ev3]}
+          :tools [:pynxc]
+          :robots [:nxt]}
+         {:id 9 :doi "10.1080/15391523.2013.10782614" :year 2013
+          :ages [4 6]
+          :tools [:cherp]
+          :robots [:lego]}
+         {:id 10 :doi "10.1016/j.actaastro.2012.09.006" :year 2013
+          :ages [13 17]
+          :tools [:cpp :zr]
+          :robots [:spheres]}
          {:id 11 :doi "10.1016/j.compedu.2013.10.020" :year 2014
           :ages [5 6]
           :tools [:cherp]
           :robots [:lego]}
-         {:id 12 :doi "10.1007/s00779-014-0774-3" :year 2015
-          :ages [6 12]
-          :tools [:proteas]
-          :robots [:nxt]}
-         {:id 13 :doi "10.1016/j.cag.2015.04.008" :year 2015
+         {:id 12 :doi "10.5772/58249" :year 2014
           :ages [18]
-          :tools [:arduino-c]
-          :robots [:arduino]}
-         {:id 14 :doi "10.1007/s10798-014-9287-7" :year 2015
+          :tools [:labview :robolab :lego :robotc :nqc]
+          :robots [:controllab :rcx :nxt :ev3]}
+         {:id 13 :doi "10.5755/j01.eee.20.1.6169" :year 2014
+          :ages [18]
+          :tools [:lego :mvpl :arduino-c]
+          :robots [:nxt :4wd :5la]}
+         {:id 14 :doi "10.3233/TAD-140404" :year 2014
+          :ages [12 13]
+          :tools [:robolab]
+          :robots [:rcx]}
+         {:id 15 :doi "10.1007/s10798-014-9287-7" :year 2015
           :ages [5 6]
           :tools [:cherp]
           :robots [:wedo]}
-         {:id 15 :doi "10.1109/RITA.2015.2452692" :year 2015
+         {:id 16 :doi "10.1109/RITA.2015.2452692" :year 2015
           :ages [4 6]
           :tools [:modebots]
           :robots [:nxt]}
-         {:id 16 :doi "10.1155/2016/1714350" :year 2016
-          :ages [4 6]
-          :tools [:titibots]
+         {:id 17 :doi "10.1016/j.cag.2015.04.008" :year 2015
+          :ages [18]
+          :tools [:arduino-c]
+          :robots [:arduino]}
+         {:id 18 :doi "10.17485/ijst/2015/v8i26/80723" :year 2015
+          :ages [8 13]
+          :tools [:scratch]
+          :robots [:korean]}
+         {:id 19 :doi "10.1007/s00779-014-0774-3" :year 2015
+          :ages [6 12]
+          :tools [:proteas]
           :robots [:nxt]}
-         {:id 17 :doi "10.1007/s10798-015-9304-5" :year 2016
-          :ages [4 7]
-          :tools [:cherp]
-          :robots [:kiwi]}
-         {:id 18 :doi "10.1109/MRA.2016.2533002" :year 2016
+         {:id 20 :doi "10.1109/MRA.2016.2533002" :year 2016
           :ages [18]
           :tools [:labview]
           :robots [:dani]}
-         {:id 19 :doi "10.1007/978-3-319-55553-9_7" :year 2017
-          :ages [11 12]
-          :tools [:picaxe]
-          :robots [:basic]}
-         {:id 20 :doi "10.1007/978-3-319-55553-9_15" :year 2017
-          :ages [15 16]
-          :tools [:appinventor]
+         {:id 21 :doi "10.1007/s10798-015-9304-5" :year 2016
+          :ages [4 7]
+          :tools [:cherp]
+          :robots [:kiwi]}
+         {:id 22 :doi "10.1155/2016/1714350" :year 2016
+          :ages [4 6]
+          :tools [:titibots]
           :robots [:nxt]}
-         {:id 21 :doi "10.1007/978-3-319-55553-9_2" :year 2017
-          :ages [8 12]
-          :tools [:scratch]
-          :robots [:arduino]}
-         {:id 22 :doi "10.1007/978-3-319-55553-9_13" :year 2017
-          :ages [10 12]
-          :tools [:wedo]
-          :robots [:wedo]}
-         {:id 23 :doi "10.1007/978-3-319-55553-9_17" :year 2017
-          :ages [14 15]
-          :tools [:lego]
-          :robots [:nxt]}
-         {:id 24 :doi "10.1007/978-3-319-55553-9_22" :year 2017
-          :ages [10 12]
-          :tools [:wedo]
-          :robots [:wedo]}
-         {:id 25 :doi "10.1007/978-3-319-55553-9_14" :year 2017
-          :ages [9 12]
-          :tools [:scratch]
-          :robots [:wedo]}
-         {:id 26 :doi "10.1007/978-3-319-55553-9_6" :year 2017
-          :ages [18]
-          :tools [:aseba]
-          :robots [:thymio]}
-         {:id 27 :doi "10.1109/MRA.2016.2636372" :year 2017
-          :ages nil
-          :tools [:aseba :thymio-vpl :blockly]
-          :robots [:thymio]}
-         {:id 28 :doi "10.1145/3043950" :year 2017
-          :ages [10 14]
-          :tools [:scratch]
-          :robots [:arduino-nano]}
-         {:id 29 :doi "10.1109/TE.2016.2622227" :year 2017
-          :ages [10 12]
-          :tools [:tangible]
-          :robots [:custom]}
-         {:id 30 :doi "10.1145/3025013" :year 2017
-          :ages [12 13]
-          :tools [:enchanting :modkit]
-          :robots [:nxt :arduino-lilypad]}
-         {:id 31 :doi "10.1109/RITA.2017.2697739" :year 2017
-          :ages [15 17]
-          :tools [:lego]
-          :robots [:nxt]}
-         {:id 32 :doi "10.1016/j.chb.2017.01.018" :year 2017
-          :ages [5 6]
-          :tools [:beebot]
-          :robots [:beebot]}
-         {:id 33 :doi "10.1016/j.compedu.2017.03.001" :year 2017
-          :ages [10 11]
-          :tools [:choregraphe]
-          :robots [:nao]}
-         {:id 34 :doi "10.1109/TLT.2016.2627565" :year 2017
-          :ages [17 24]
-          :tools [:arduino-c]
-          :robots [:arduino-mega]}
-         {:id 35 :doi "10.1166/asl.2017.10252" :year 2017
-          :ages [3 5]
-          :tools [:tangible]
-          :robots [:c-block]}
-         {:id 36 :doi "10.20965/jrm.2017.p0980" :year 2017
+         {:id 23 :doi "10.20965/jrm.2017.p0980" :year 2017
           :ages [5 13]
           :tools [:beebot]
           :robots [:custom]}
-         {:id 37 :doi "10.29333/ejmste/93483" :year 2018
+         {:id 24 :doi "10.1166/asl.2017.10252" :year 2017
+          :ages [3 5]
+          :tools [:tangible]
+          :robots [:c-block]}
+         {:id 25 :doi "10.1109/TLT.2016.2627565" :year 2017
+          :ages [17 24]
+          :tools [:arduino-c]
+          :robots [:arduino-mega]}
+         {:id 26 :doi "10.1016/j.compedu.2017.03.001" :year 2017
           :ages [10 11]
-          :tools [:mblock]
-          :robots [:mbot]}
-         {:id 38 :doi "10.1109/RITA.2018.2801898" :year 2018
+          :tools [:choregraphe]
+          :robots [:nao]}
+         {:id 27 :doi "10.1016/j.chb.2017.01.018" :year 2017
+          :ages [5 6]
+          :tools [:beebot]
+          :robots [:beebot]}
+         {:id 28 :doi "10.1109/RITA.2017.2697739" :year 2017
+          :ages [15 17]
+          :tools [:lego]
+          :robots [:nxt]}
+         {:id 29 :doi "10.1145/3025013" :year 2017
+          :ages [12 13]
+          :tools [:enchanting :modkit]
+          :robots [:nxt :arduino-lilypad]}
+         {:id 30 :doi "10.1109/TE.2016.2622227" :year 2017
+          :ages [10 12]
+          :tools [:tangible]
+          :robots [:custom]}
+         {:id 31 :doi "10.1145/3043950" :year 2017
+          :ages [10 14]
+          :tools [:scratch]
+          :robots [:arduino-nano]}
+         {:id 32 :doi "10.1109/MRA.2016.2636372" :year 2017
+          :ages nil
+          :tools [:aseba :thymio-vpl :blockly]
+          :robots [:thymio]}
+         {:id 33 :doi "10.13187/ejced.2017.3.390" :year 2017
           :ages [18]
-          :tools [:bluej]
-          :robots [:ev3]}
-         {:id 39 :doi "10.1016/j.chb.2017.09.029" :year 2018
-          :ages [16 18]
-          :tools [:phogo]
-          :robots [:bqzum :esp8266 :esp32]}
-         {:id 40 :doi "10.1515/itit-2017-0032" :year 2018
-          :ages [12 16]
+          :tools [:lego :nqc]
+          :robots [:nxt]}
+         {:id 34 :doi "10.1007/978-3-319-55553-9_15" :year 2017
+          :ages [15 16]
+          :tools [:appinventor]
+          :robots [:nxt]}
+         {:id 35 :doi "10.1007/978-3-319-55553-9_6" :year 2017
+          :ages [18]
+          :tools [:aseba]
+          :robots [:thymio]}
+         {:id 36 :doi "10.1007/978-3-319-55553-9_14" :year 2017
+          :ages [9 12]
+          :tools [:scratch]
+          :robots [:wedo]}
+         {:id 37 :doi "10.1007/978-3-319-55553-9_7" :year 2017
+          :ages [11 12]
+          :tools [:picaxe]
+          :robots [:basic]}
+         {:id 38 :doi "10.1007/978-3-319-55553-9_17" :year 2017
+          :ages [14 15]
+          :tools [:lego]
+          :robots [:nxt]}
+         {:id 39 :doi "10.1007/978-3-319-55553-9_22" :year 2017
+          :ages [10 12]
+          :tools [:wedo]
+          :robots [:wedo]}
+         {:id 40 :doi "10.1007/978-3-319-55553-9_13" :year 2017
+          :ages [10 12]
+          :tools [:wedo]
+          :robots [:wedo]}
+         {:id 41 :doi "10.1007/978-3-319-55553-9_2" :year 2017
+          :ages [8 12]
           :tools [:scratch]
           :robots [:arduino]}
-         {:id 41 :doi "10.1007/s10798-017-9397-0" :year 2018
-          :ages [3 6]
-          :tools [:tangible]
-          :robots [:kibo]}
-         {:id 42 :doi "10.1049/trit.2018.0016" :year 2018
-          :ages [14 18]
-          :tools [:viple]
-          :robots [:ev3 :galileo :raspberry :pcDuino :minnow
-                   :curie :edison :bioloid :arduino-uno :arduino-mega :arduino-duo]}
-         {:id 43 :doi "10.1145/3211332.3211335" :year 2018
-          :ages nil
-          :tools [:makecode]
-          :robots [:microbit]}
-         {:id 44 :doi "10.1002/cae.21966" :year 2018
-          :ages [18]
-          :tools [:crumble :arduino-c]
-          :robots [:crumble :arduino]}
-         {:id 45 :doi "10.1016/j.ijcci.2018.03.002" :year 2018
-          :ages [14 18]
-          :tools [:talkoo]
-          :robots [:talkoo]}
-         {:id 46 :doi "10.1016/j.ijcci.2018.03.004" :year 2018
+         {:id 42 :doi "10.1016/j.ijcci.2018.03.004" :year 2018
           :ages [12 14]
           :tools [:blocklytalky]
           :robots [:raspberry]}
-         {:id 47 :doi "10.14201/eks2019_20_a17" :year 2019
-          :ages [3 6]
-          :tools [:beebot :tangible]
-          :robots [:kibo :beebot :bluebot :roamer :cubetto :codeapillar]}
-         {:id 48 :doi "10.1109/ACCESS.2019.2895913" :year 2019
+         {:id 43 :doi "10.1002/cae.21966" :year 2018
           :ages [18]
-          :tools [:sphero-oop :sphero-edu :vedils]
-          :robots [:sphero]}
-         {:id 49 :doi "10.20368/1971-8829/1625" :year 2019
-          :ages [18]
-          :tools [:cpp]
-          :robots [:ev3 :mbot]}
-         {:id 50 :doi "10.1145/3336126" :year 2019
-          :ages [14 15]
-          :tools [:appinventor :scratchx]
-          :robots [:nxt]}
-         {:id 51 :doi "10.3390/electronics8080899" :year 2019
-          :ages [12 16]
-          :tools [:pybokids]
-          :robots [:mbot]}
-         {:id 52 :doi "10.1108/JET-12-2018-0069" :year 2019
-          :ages [10 11]
-          :tools [:kinderbot]
-          :robots [:ev3]}
-         {:id 53 :doi "10.1016/j.sysarc.2019.05.005" :year 2019
-          :ages [16 18]
+          :tools [:crumble :arduino-c]
+          :robots [:crumble :arduino]}
+         {:id 44 :doi "10.1016/j.ijcci.2018.03.002" :year 2018
+          :ages [14 18]
+          :tools [:talkoo]
+          :robots [:talkoo]}
+         {:id 45 :doi "10.1007/s10639-017-9677-z" :year 2018
+          :ages [9 11]
+          :tools [:beebot]
+          :robots [:roamer]}
+         {:id 46 :doi "10.1145/3211332.3211335" :year 2018
+          :ages nil
           :tools [:makecode]
           :robots [:microbit]}
-         {:id 54 :doi "10.18178/ijmerr.8.5.764-770" :year 2019
-          :ages [12 14]
+         {:id 47 :doi "10.1049/trit.2018.0016" :year 2018
+          :ages [14 18]
+          :tools [:viple]
+          :robots [:ev3 :galileo :raspberry :pcDuino :minnow :curie :edison :bioloid :arduino-uno :arduino-mega :arduino-duo]}
+         {:id 48 :doi "10.1007/s10798-017-9397-0" :year 2018
+          :ages [3 6]
+          :tools [:tangible]
+          :robots [:kibo]}
+         {:id 49 :doi "10.1515/itit-2017-0032" :year 2018
+          :ages [12 16]
           :tools [:scratch]
-          :robots [:microrobots :nxt]}
-         {:id 55 :doi "10.3390/informatics6040043" :year 2019
-          :ages [8 10]
-          :tools [:wedo]
-          :robots [:wedo]}
-         {:id 56 :doi "10.1080/07380569.2019.1677436" :year 2019
-          :ages [3 4]
-          :tools [:beebot]
-          :robots [:beebot]}
+          :robots [:arduino]}
+         {:id 50 :doi "10.1016/j.chb.2017.09.029" :year 2018
+          :ages [16 18]
+          :tools [:phogo]
+          :robots [:bqzum :esp8266 :esp32]}
+         {:id 51 :doi "10.1109/RITA.2018.2801898" :year 2018
+          :ages [18]
+          :tools [:bluej]
+          :robots [:ev3]}
+         {:id 52 :doi "10.29333/ejmste/93483" :year 2018
+          :ages [10 11]
+          :tools [:mblock]
+          :robots [:mbot]}
+         {:id 53 :doi "10.18355/XL.2018.11.01.10" :year 2018
+          :ages [6 10]
+          :tools [:scratch]
+          :robots [:robbo]}
+         {:id 54 :doi "10.1007/s11423-019-09648-5" :year 2019
+          :ages [11 12]
+          :tools [:mblock]
+          :robots [:mbot]}
+         {:id 55 :doi "10.1007/s40692-019-00147-3" :year 2019
+          :ages [5 7]
+          :tools [:tangible]
+          :robots [:kibo]}
+         {:id 56 :doi "10.1109/RITA.2019.2950130" :year 2019
+          :ages [6 11]
+          :tools [:crumble :arduino-c]
+          :robots [:crumble :arduino]}
          {:id 57 :doi "10.1080/1475939X.2019.1670248" :year 2019
           :ages [6 10]
           :tools [:choregraphe :python]
           :robots [:nao]}
-         {:id 58 :doi "10.1109/RITA.2019.2950130" :year 2019
-          :ages [6 11]
-          :tools [:crumble :arduino-c]
-          :robots [:crumble :arduino]}
-         {:id 59 :doi "10.1007/s40692-019-00147-3" :year 2019
-          :ages [5 7]
+         {:id 58 :doi "10.1080/07380569.2019.1677436" :year 2019
+          :ages [3 4]
+          :tools [:beebot]
+          :robots [:beebot]}
+         {:id 59 :doi "10.3390/informatics6040043" :year 2019
+          :ages [8 10]
+          :tools [:wedo]
+          :robots [:wedo]}
+         {:id 60 :doi "10.1007/s40299-019-00438-4" :year 2019
+          :ages [5 6]
           :tools [:tangible]
-          :robots [:kibo]}
-         {:id 60 :doi "10.1109/ACCESS.2020.3035083" :year 2020
+          :robots [:turtlebot]}
+         {:id 61 :doi "10.3390/educsci9030224" :year 2019
+          :ages [18]
+          :tools [:appinventor :cpp :python]
+          :robots [:custom]}
+         {:id 62 :doi "10.18178/ijmerr.8.5.764-770" :year 2019
+          :ages [12 14]
+          :tools [:scratch]
+          :robots [:microrobots :nxt]}
+         {:id 63 :doi "10.1016/j.sysarc.2019.05.005" :year 2019
+          :ages [16 18]
+          :tools [:makecode]
+          :robots [:microbit]}
+         {:id 64 :doi "10.1108/JET-12-2018-0069" :year 2019
+          :ages [10 11]
+          :tools [:kinderbot]
+          :robots [:ev3]}
+         {:id 65 :doi "10.3390/electronics8080899" :year 2019
+          :ages [12 16]
+          :tools [:pybokids]
+          :robots [:mbot]}
+         {:id 66 :doi "10.1145/3336126" :year 2019
+          :ages [14 15]
+          :tools [:appinventor :scratchx]
+          :robots [:nxt]}
+         {:id 67 :doi "10.20368/1971-8829/1625" :year 2019
+          :ages [18]
+          :tools [:cpp]
+          :robots [:ev3 :mbot]}
+         {:id 68 :doi "10.17275/per.19.8.6.2" :year 2019
+          :ages [11 12]
+          :tools [:scratch]
+          :robots [:arduino-uno ; No especifican exactamente qué versión de Arduino, 
+                                ; pero la UNO es la más común así que asumo que es esta
+                   ]}
+         {:id 69 :doi "10.14201/eks2019_20_a17" :year 2019
+          :ages [3 6]
+          :tools [:beebot :tangible]
+          :robots [:kibo :beebot :bluebot :roamer :cubetto :codeapillar]}
+         {:id 70 :doi "10.1109/ACCESS.2019.2895913" :year 2019
+          :ages [18]
+          :tools [:sphero-oop :sphero-edu :vedils]
+          :robots [:sphero]}
+         {:id 71 :doi "10.3390/educsci10120387" :year 2020
+          :ages [6 10]
+          :tools [:scratch]
+          :robots [:geombot]}
+         {:id 72 :doi "10.1016/j.tsc.2020.100714" :year 2020
+          :ages [11 12]
+          :tools [:lego]
+          :robots [:ev3]}
+         {:id 73 :doi "10.1016/j.scico.2020.102534" :year 2020
+          :ages [8 17]
+          :tools [:eud-mars]
+          :robots [:lego :vex :parrot :nao :irobot]}
+         {:id 74 :doi "10.1080/20473869.2019.1565725" :year 2020
+          :ages [8 9]
+          :tools [:lego]
+          :robots [:ev3]}
+         {:id 75 :doi "10.1080/15391523.2020.1713263" :year 2020
+          :ages [8 10]
+          :tools [:lego]
+          :robots [:nxt :ev3]}
+         {:id 76 :doi "10.3389/frobt.2020.00021" :year 2020
+          :ages [9 18]
+          :tools [:lego]
+          :robots [:ev3]}
+         {:id 77 :doi "10.3389/fpsyg.2019.02813" :year 2020
+          :ages [5 7]
+          :tools [:beebot]
+          :robots [:beebot]}
+         {:id 78 :doi "10.3991/ijoe.v16i14.17069" :year 2020
+          :ages [11 14]
+          :tools [:makecode]
+          :robots [:ev3]}
+         {:id 79 :doi "10.1109/ACCESS.2020.3035083" :year 2020
           :ages nil
           :tools [:bipes]
           :robots [:stm32 :wemosd1mini :esp8266 :esp32 :microbit
                    :toradex :pc104 :beaglebone :raspberry]}
-         {:id 61 :doi "10.1109/ACCESS.2020.2972410" :year 2020
-          :ages nil
-          :tools [:learnblock]
-          :robots []}
-         {:id 62 :doi "10.1002/cae.22184" :year 2020
-          :ages [10 18]
-          :tools [:arduino-c]
-          :robots [:arduino]}
-         {:id 63 :doi "10.1109/ACCESS.2020.3015533" :year 2020
+         {:id 80 :doi "10.1109/ACCESS.2020.3015533" :year 2020
           :ages [4 8]
           :tools [:blockly]
           :robots [:cozmo]}
-         {:id 64 :doi "10.3390/educsci10080202" :year 2020
+         {:id 81 :doi "10.3390/educsci10080202" :year 2020
           :ages [7 8]
           :tools [:beebot]
           :robots [:beebot]}
-         {:id 65 :doi "10.3991/ijoe.v16i14.17069" :year 2020
-          :ages [11 14]
-          :tools [:makecode]
-          :robots [:ev3]}
-         {:id 66 :doi "10.3389/frobt.2020.00021" :year 2020
-          :ages [9 18]
-          :tools [:lego]
-          :robots [:ev3]}
-         {:id 67 :doi "10.1080/15391523.2020.1713263" :year 2020
-          :ages [8 10]
-          :tools [:lego]
-          :robots [:nxt :ev3]}
-         {:id 68 :doi "10.1016/j.scico.2020.102534" :year 2020
-          :ages [8 17]
-          :tools [:eud-mars]
-          :robots [:lego :vex :parrot :nao :irobot]}
-         {:id 69 :doi "10.1109/TE.2021.3066891" :year 2021
-          :ages [8 12]
-          :tools [:crumble]
-          :robots [:crumble]}
-         {:id 70 :doi "10.1016/j.ijcci.2021.100388" :year 2021
-          :ages [8 9]
-          :tools [:beebot]
-          :robots [:beebot]}
-         {:id 71 :doi "10.46328/IJEMST.1205" :year 2021
-          :ages [9 10]
-          :tools [:sphero-edu]
-          :robots [:sphero]}
-         {:id 72 :doi "10.1007/s10798-021-09677-3" :year 2021
-          :ages [7 9]
-          :tools [:scratch]
-          :robots [:ev3]}
-         {:id 73 :doi "10.1108/ITSE-04-2021-0074" :year 2021
-          :ages [18]
+         {:id 82 :doi "10.1109/ACCESS.2020.2972410" :year 2020
+          :ages nil
+          :tools [:learnblock]
+          :robots []}
+         {:id 83 :doi "10.1002/cae.22184" :year 2020
+          :ages [10 18]
           :tools [:arduino-c]
           :robots [:arduino]}
-         {:id 74 :doi "10.29333/ejmste/10842" :year 2021
-          :ages [10 11]
-          :tools [:scratch]
-          :robots [:arduino]}
-         {:id 75 :doi "10.1109/TLT.2021.3058060" :year 2021
-          :ages [4 10]
-          :tools [:beebot]
-          :robots [:beebot]}
-         {:id 76 :doi "10.1007/s10798-019-09559-9" :year 2021
-          :ages [9 10]
-          :tools [:lego]
-          :robots [:nxt]}
-         {:id 77 :doi "10.1109/RITA.2021.3089919" :year 2021
-          :ages [6 18]
-          :tools [:arduino-c]
-          :robots [:arduino-uno]}
-         {:id 78 :doi "10.1016/j.compedu.2021.104222" :year 2021
-          :ages [5 9]
-          :tools [:tangible]
-          :robots [:kibo]}
-         {:id 79 :doi "10.3390/educsci11090518" :year 2021
-          :ages [6 9]
-          :tools [:beebot]
-          :robots [:doc]}
-         {:id 80 :doi "10.3390/s21186243" :year 2021
-          :ages [11 13]
-          :tools [:makecode]
-          :robots [:microbit]}
-         {:id 81 :doi "10.1111/jcal.12570" :year 2021
-          :ages [10 12]
-          :tools [:blockly]
-          :robots [:arduino]}
-         {:id 82 :doi "10.3390/electronics10243056" :year 2021
+         {:id 84 :doi "10.3390/electronics10243056" :year 2021
           :ages [9 12]
           :tools [:ardublockly]
           :robots [:arduino-mega]}
-         {:id 83 :doi "10.1007/s10758-021-09508-3" :year 2021
+         {:id 85 :doi "10.1007/s10758-021-09508-3" :year 2021
           :ages [15 19]
           :tools [:blockly :python]
-          :robots [:arduino-mega :raspberry]}]))
+          :robots [:arduino-mega :raspberry]}
+         {:id 86 :doi "10.1111/jcal.12570" :year 2021
+          :ages [10 12]
+          :tools [:blockly]
+          :robots [:arduino]}
+         {:id 87 :doi "10.3390/s21186243" :year 2021
+          :ages [11 13]
+          :tools [:makecode]
+          :robots [:microbit]}
+         {:id 88 :doi "10.3390/educsci11090518" :year 2021
+          :ages [6 9]
+          :tools [:beebot]
+          :robots [:doc]}
+         {:id 89 :doi "10.1016/j.compedu.2021.104222" :year 2021
+          :ages [5 9]
+          :tools [:tangible]
+          :robots [:kibo]}
+         {:id 90 :doi "10.1109/RITA.2021.3089919" :year 2021
+          :ages [6 18]
+          :tools [:arduino-c]
+          :robots [:arduino-uno]}
+         {:id 91 :doi "10.1111/bjet.13079" :year 2021
+          :ages [14 15]
+          :tools [:arduino-c]
+          :robots [:arduino-lilypad]}
+         {:id 92 :doi "10.1007/s10798-019-09559-9" :year 2021
+          :ages [9 10]
+          :tools [:lego]
+          :robots [:nxt]}
+         {:id 93 :doi "10.1109/TLT.2021.3058060" :year 2021
+          :ages [4 10]
+          :tools [:beebot]
+          :robots [:beebot]}
+         {:id 94 :doi "10.46328/IJEMST.1205" :year 2021
+          :ages [9 10]
+          :tools [:sphero-edu]
+          :robots [:sphero]}
+         {:id 95 :doi "10.29333/ejmste/10842" :year 2021
+          :ages [10 11]
+          :tools [:scratch]
+          :robots [:arduino]}
+         {:id 96 :doi "10.1080/09669760.2021.1892599" :year 2021
+          :ages [5 6]
+          :tools [:beebot]
+          :robots [:bluebot]}
+         ]))
 
 (do ; Verify papers
   (when-not (= (set (conj (keys robots) :arduino :lego))
@@ -1193,7 +1244,7 @@
       (doseq [tool (:tools paper)]
         (when-not (contains? tools tool)
           (println "Paper" (:id paper) "has invalid tool" tool))))
-    (if (and (not= 61 (:id paper))
+    (if (and (not= 82 (:id paper))
              (empty? (:robots paper)))
       (println "Paper" (:id paper) "has NO robots!")
       (let [robots (conj (set (keys robots))
