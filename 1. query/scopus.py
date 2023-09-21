@@ -4,7 +4,7 @@ import pandas as pd
 # https://dev.elsevier.com/sc_search_tips.html
 
 #%%
-for year in range(2022, 2011, -1):
+for year in range(2023, 2021, -1):
     #query = 'TITLE ( programming  AND  ( language  OR  environment ) )  AND  ( education )  AND  ( LIMIT-TO ( SUBJAREA ,  "COMP " )  OR  LIMIT-TO ( SUBJAREA ,  "ENGI " )  OR  LIMIT-TO ( SUBJAREA ,  "SOCI " ) ) '
     #query = 'ABS(experimental*) AND ABS(gameplay*)'# AND ABS(mechanics*)'
     #query = 'experimental AND gameplay AND mechanics'
@@ -20,11 +20,11 @@ for year in range(2022, 2011, -1):
     
     # NOTE(Richo): subscriber=True cuando lo ejecutás en la red del CAETI con las credenciales de Scopus
     # (supuestamente te trae toda la info... incluido el abstract)
-    s=ScopusSearch(query, subscriber=False)
+    s=ScopusSearch(query, subscriber=True)
 
     print("{}: {}".format(year, s.get_results_size()))
     df = pd.DataFrame(pd.DataFrame(s.results))
 
-    df.to_csv(r"csv/query_7_"+str(year)+".csv")
+    df.to_csv(r"csv/query_8_"+str(year)+".csv")
 
 #%%
